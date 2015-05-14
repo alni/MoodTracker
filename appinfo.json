@@ -1,0 +1,34 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "Alexander Nilsen",
+    "longName": "Mood Tracker",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/action_icon_plus.png",
+                "name": "IMAGE_ACTION_ICON_PLUS",
+                "type": "png"
+            },
+            {
+                "file": "images/action_icon_minus.png",
+                "name": "IMAGE_ACTION_ICON_MINUS",
+                "type": "png"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "Mood Tracker",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
+    "uuid": "580b241e-7ee7-42d6-af3a-ca160b5c28cd",
+    "versionLabel": "2.0",
+    "watchapp": {
+        "watchface": false
+    }
+}
