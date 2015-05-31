@@ -1,6 +1,13 @@
 #include <pebble.h>
 #include "storage.h"
+#include "common.h"
   
+  
+/*void get_moods(int *output[], int length) {
+  for (int i = 0; i < length; i++) {
+    output[i] = read_mood(i);
+  }
+}*/
   
 void save_mood(int key, int mood) {
   switch(key) {
@@ -19,12 +26,16 @@ void save_mood(int key, int mood) {
 int read_mood(int key) {
   // Count number of launches
   int mood = 0;
-
+  
+  #if APP_DEBUG
+    mood = DUMMY_DATA[key];
+  #else
   // Check to see if a count already exists
   if (persist_exists(key)) {
     // Load stored count
     mood = persist_read_int(key);
   }
+  #endif
   return mood;
 }
   

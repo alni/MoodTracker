@@ -75,6 +75,10 @@ static void main_window_load(Window *window) {
 
   action_bar_layer_set_icon(s_action_bar, BUTTON_ID_UP, s_icon_plus);
   action_bar_layer_set_icon(s_action_bar, BUTTON_ID_DOWN, s_icon_minus);
+#ifdef PBL_PLATFORM_BASALT
+  window_set_background_color(window, GColorCadetBlue);
+  action_bar_layer_set_background_color(s_action_bar, GColorCobaltBlue);
+#endif
 
   int width = layer_get_frame(window_layer).size.w - ACTION_BAR_WIDTH - 3;
 

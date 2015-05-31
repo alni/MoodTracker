@@ -10,6 +10,9 @@
 
 #include "pebble.h"
   
+  
+void get_moods(int *output[], int length);
+  
 void save_mood(int key, int val);
 int  read_mood(int key);
   
