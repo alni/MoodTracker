@@ -1,9 +1,10 @@
 #include "overview_window.h"
+#include "common.h"
 #include "storage.h"
 #include "math_helpers.h"
 #include "gpath_builder.h"
   
-#define MAX_POINTS 256
+#define MAX_POINTS 512
 
 static Window *s_main_window;
 static TextLayer *s_text_layer;
@@ -35,26 +36,44 @@ void draw_days(GRect bounds, GContext *ctx) {
 }
 
 void draw_graph_part_day(GContext *ctx, GRect bounds, char* s_day, int _day1) {
-  graphics_draw_text(ctx, s_day, s_res_font_days, GRect(2+(20*_day1), bounds.size.h-21, 24, 21), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
+  graphics_draw_text(ctx, s_day, s_res_font_days, GRect(2+(20*_day1), (bounds.size.h/2)-21, 24, 21), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
 }
 
 
 
-void draw_graph_part(GContext *ctx, GRect bounds, char* s_day, int _day1, int _day2, GPoint center, int hspacing, GPathBuilder *builder) {
-  int _mood = read_mood(_day1);
-  GPoint p0 = GPoint(12+2+(20*_day1), center.y-(_mood*hspacing));
-  //GPoint p0 = GPoint(2, center.y-(_mood*8));
-  _mood = read_mood(_day2);
-  GPoint p1 = GPoint(12+2+(20*_day2), center.y-(_mood*hspacing));
+void draw_graph_part_base(GContext *ctx, GRect bounds, char* s_day, int _day0, int _day1, GPoint center, int hspacing, GPathBuilder *builder, bool first_time) {
+  int _mood0 = read_mood(_day0);
+  GPoint p0 = GPoint(12+2+(20*_day0), center.y-(_mood0*hspacing));
+  int _mood1 = read_mood(_day1);
+  GPoint p1 = GPoint(12+2+(20*_day1), center.y-(_mood1*hspacing));
   graphics_context_set_stroke_color(ctx, GColorWhite);
 #ifdef PBL_PLATFORM_APLITE 
   graphics_draw_line(ctx, p0, p1);
-#elif PBL_PLATFORM_BASALT    
-  gpath_builder_move_to_point(builder, p0);
-  gpath_builder_curve_to_point(builder, p1, p0, p1);
+#elif PBL_PLATFORM_BASALT
+  int c_x = (p0.x + p1.x) / 2;
+  int c_y = (p0.y + p1.y) / 2;
+  int a_x = (p0.x + c_x) / 2;
+  int a_y = math_int_find_bezier_control_point(c_y, 100); //(((c_y * 100) - (100 - 100)) / 100) / 1;
+    //(p0.y + c_y) / 2;
+  int b_x = (p1.x + c_x) / 2;
+  int b_y = math_int_find_bezier_control_point(c_y, 100); //(((c_y * 100) - (100 - 100)) / 100) / 1;
+    //(p1.y + c_y) / 2;
+  GPoint p_a = GPoint(a_x, a_y);
+  GPoint p_b = GPoint(b_x, b_y);
+  if (first_time == true) {
+    gpath_builder_move_to_point(builder, p0);
+  }
+  gpath_builder_curve_to_point(builder, p1, p_b, p_a);
 #endif
-  //graphics_draw_text(ctx, s_day, s_res_font_days, GRect(2+(20*_day1), bounds.size.h-21, 24, 21), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
-  draw_graph_part_day(ctx, bounds, s_day, _day1);
+  draw_graph_part_day(ctx, bounds, s_day, _day0);
+}
+
+void draw_graph_part_start(GContext *ctx, GRect bounds, char* s_day, int _day0, int _day1, GPoint center, int hspacing, GPathBuilder *builder) {
+  draw_graph_part_base(ctx, bounds, s_day, _day0, _day1, center, hspacing, builder, true);
+}
+
+void draw_graph_part_parts(GContext *ctx, GRect bounds, char* s_day, int _day0, int _day1, GPoint center, int hspacing, GPathBuilder *builder) {
+  draw_graph_part_base(ctx, bounds, s_day, _day0, _day1, center, hspacing, builder, false);
 }
 
 void canvas_update_proc(Layer *this_layer, GContext *ctx) {
@@ -62,6 +81,7 @@ void canvas_update_proc(Layer *this_layer, GContext *ctx) {
     gpath_destroy(s_path);
   }
   GRect bounds = layer_get_bounds(this_layer);
+  GRect _bounds = GRect(bounds.origin.x, bounds.origin.y, bounds.size.w, bounds.size.h / 2);
   
   
   GPathBuilder *builder = gpath_builder_create(MAX_POINTS);
@@ -71,93 +91,11 @@ void canvas_update_proc(Layer *this_layer, GContext *ctx) {
   graphics_context_set_fill_color(ctx, GColorBlack);
   graphics_fill_rect(ctx, bounds, 0, GCornerNone);
   // Get the center of the screen (non full-screen)
-  //GPoint center = GPoint(bounds.size.w / 2, (bounds.size.h / 2));
   GPoint center = GPoint((bounds.size.w / 2) - bounds.origin.x, (bounds.size.h / 2) - bounds.origin.y);
   int hspacing = bounds.size.h / 20;
-
-  // Draw the 'loop' of the 'P'
-  /*graphics_context_set_fill_color(ctx, GColorBlack);
-  graphics_fill_circle(ctx, center, 40);
-  graphics_context_set_fill_color(ctx, GColorWhite);
-  graphics_fill_circle(ctx, center, 35);*/ 
   
   // Draw the mood lines
   graphics_context_set_fill_color(ctx, GColorWhite);
-  
-  
-  /*int _day = KEY_MOOD_SUN;
-  int _mood = read_mood(_day);
-  GPoint p0 = GPoint(12+2, center.y-(_mood*hspacing));
-  //GPoint p0 = GPoint(2, center.y-(_mood*8));
-  _day = KEY_MOOD_MON;
-  _mood = read_mood(_day);
-  GPoint p1 = GPoint(12+2+20, center.y-(_mood*hspacing));
-  graphics_context_set_stroke_color(ctx, GColorWhite);
-  gpath_builder_move_to_point(builder, p0);
-  gpath_builder_curve_to_point(builder, p1, p0, p1);
-  graphics_draw_text(ctx, "su", s_res_font_days, GRect(2, bounds.size.h-21, 24, 21), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
-  //graphics_draw_line(ctx, p0, p1);
-  
-  p0 = GPoint(12+2+20, center.y-(_mood*hspacing));
-  _day = KEY_MOOD_TUE;
-  _mood = read_mood(_day);
-  p1 = GPoint(12+2+(20*2), center.y-(_mood*hspacing));
-  graphics_context_set_stroke_color(ctx, GColorWhite);  
-  gpath_builder_move_to_point(builder, p0);
-  gpath_builder_curve_to_point(builder, p1, p0, p1);
-  graphics_draw_text(ctx, "mo", s_res_font_days, GRect(2+20, bounds.size.h-21, 24, 21), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
-  //graphics_draw_line(ctx, p0, p1);
-  
-  p0 = GPoint(12+2+(20*2), center.y-(_mood*hspacing));
-  _day = KEY_MOOD_WED;
-  _mood = read_mood(_day);
-  p1 = GPoint(12+2+(20*3), center.y-(_mood*hspacing));
-  graphics_context_set_stroke_color(ctx, GColorWhite);
-  gpath_builder_move_to_point(builder, p0);
-  gpath_builder_curve_to_point(builder, p1, p0, p1);
-  graphics_draw_text(ctx, "tu", s_res_font_days, GRect(2+(20*2), bounds.size.h-21, 24, 21), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
-  //graphics_draw_line(ctx, p0, p1);
-  
-  p0 = GPoint(12+2+(20*3), center.y-(_mood*hspacing));
-  _day = KEY_MOOD_THU;
-  _mood = read_mood(_day);
-  p1 = GPoint(12+2+(20*4), center.y-(_mood*hspacing));
-  graphics_context_set_stroke_color(ctx, GColorWhite);
-  gpath_builder_move_to_point(builder, p0);
-  gpath_builder_curve_to_point(builder, p1, p0, p1);
-  graphics_draw_text(ctx, "we", s_res_font_days, GRect(2+(20*3), bounds.size.h-21, 24, 21), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
-  //graphics_draw_line(ctx, p0, p1);
-  
-  p0 = GPoint(12+2+(20*4), center.y-(_mood*hspacing));
-  _day = KEY_MOOD_FRI;
-  _mood = read_mood(_day);
-  p1 = GPoint(12+2+(20*5), center.y-(_mood*hspacing));
-  graphics_context_set_stroke_color(ctx, GColorWhite);
-  gpath_builder_move_to_point(builder, p0);
-  gpath_builder_curve_to_point(builder, p1, p0, p1);
-  graphics_draw_text(ctx, "th", s_res_font_days, GRect(2+(20*4), bounds.size.h-21, 24, 21), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
-  //graphics_draw_line(ctx, p0, p1);
-  
-  p0 = GPoint(12+2+(20*5), center.y-(_mood*hspacing));
-  _day = KEY_MOOD_SAT;
-  _mood = read_mood(_day);
-  p1 = GPoint(12+2+(20*6), center.y-(_mood*hspacing));
-  graphics_context_set_stroke_color(ctx, GColorWhite);
-  gpath_builder_move_to_point(builder, p0);
-  gpath_builder_curve_to_point(builder, p1, p0, p1);
-  graphics_draw_text(ctx, "fr", s_res_font_days, GRect(2+(20*5), bounds.size.h-21, 24, 21), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
-  //graphics_draw_line(ctx, p0, p1);
-  
-  p0 = GPoint(12+2+(20*6), center.y-(_mood*hspacing));
-  _day = KEY_MOOD_SUN;
-  _mood = read_mood(_day);
-  p1 = GPoint(12+2+(20*7), center.y-(_mood*hspacing));
-  graphics_context_set_stroke_color(ctx, GColorWhite);
-  gpath_builder_move_to_point(builder, p0);
-  gpath_builder_curve_to_point(builder, p1, p0, p1);
-  graphics_draw_text(ctx, "sa", s_res_font_days, GRect(2+(20*6), bounds.size.h-21, 24, 21), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
-  //graphics_draw_line(ctx, p0, p1);
-  */
   
 
 #ifdef PBL_PLATFORM_APLITE
@@ -169,29 +107,41 @@ void canvas_update_proc(Layer *this_layer, GContext *ctx) {
   graphics_draw_rect(ctx, GRect(-1, middle_y, bounds.size.w+2, middle_h));
 #elif PBL_PLATFORM_BASALT
   int middle_h = hspacing*2;
-  int other_h = (bounds.size.h/2) - middle_h;
+  int other_h = (_bounds.size.h/2) - middle_h;
   int middle_y = other_h + (middle_h / 2);
   graphics_context_set_fill_color(ctx, GColorMidnightGreen);
-  graphics_fill_rect(ctx, GRect(0, 0, bounds.size.w, other_h+hspacing), 0, GCornerNone);
+  graphics_fill_rect(ctx, GRect(0, 0, _bounds.size.w, other_h+hspacing), 0, GCornerNone);
   graphics_context_set_fill_color(ctx, GColorWindsorTan);
-  graphics_fill_rect(ctx, GRect(0, middle_y, bounds.size.w, middle_h), 0, GCornerNone);
+  graphics_fill_rect(ctx, GRect(0, middle_y, _bounds.size.w, middle_h), 0, GCornerNone);
   graphics_context_set_fill_color(ctx, GColorBulgarianRose);
-  graphics_fill_rect(ctx, GRect(0, middle_h+middle_y, bounds.size.w, other_h+hspacing), 0, GCornerNone);
+  graphics_fill_rect(ctx, GRect(0, middle_h+middle_y, _bounds.size.w, other_h+hspacing), 0, GCornerNone);
 #endif
+  
+  graphics_context_set_stroke_color(ctx, GColorBlack);
+#if PBL_PLATFORM_BASALT
+  graphics_context_set_stroke_width(ctx, 1);
+#endif
+  int i = NUM_MOOD_MIN;
+  /*for (; i <= NUM_MOOD_MAX; i++) {
+    GPoint p0 = GPoint(0, center.y-(i*hspacing));
+    GPoint p1 = GPoint(bounds.size.w, center.y-(i*hspacing));
+    graphics_draw_line(ctx, p0, p1);
+  }*/
   
   // Draw the 'base line'
   /*GPoint p0 = GPoint(0, center.y);
   GPoint p1 = GPoint(144, center.y);
   graphics_context_set_stroke_color(ctx, GColorWhite);
   graphics_draw_line(ctx, p0, p1);*/
-  
-  draw_graph_part(ctx, bounds, "su", KEY_MOOD_SUN, KEY_MOOD_MON, center, hspacing, builder);
-  draw_graph_part(ctx, bounds, "mo", KEY_MOOD_MON, KEY_MOOD_TUE, center, hspacing, builder);
-  draw_graph_part(ctx, bounds, "tu", KEY_MOOD_TUE, KEY_MOOD_WED, center, hspacing, builder);
-  draw_graph_part(ctx, bounds, "we", KEY_MOOD_WED, KEY_MOOD_THU, center, hspacing, builder);
-  draw_graph_part(ctx, bounds, "th", KEY_MOOD_THU, KEY_MOOD_FRI, center, hspacing, builder);
-  draw_graph_part(ctx, bounds, "fr", KEY_MOOD_FRI, KEY_MOOD_SAT, center, hspacing, builder);
-  draw_graph_part_day(ctx, bounds, "sa", KEY_MOOD_SAT);
+#if PBL_PLATFORM_BASALT
+  graphics_context_set_stroke_width(ctx, 2);
+#endif
+  draw_graph_part_start(ctx, bounds, "su", KEY_MOOD_SUN, KEY_MOOD_MON, center, hspacing, builder);
+  draw_graph_part_parts(ctx, bounds, "mo", KEY_MOOD_MON, KEY_MOOD_TUE, center, hspacing, builder);
+  draw_graph_part_parts(ctx, bounds, "tu", KEY_MOOD_TUE, KEY_MOOD_WED, center, hspacing, builder);
+  draw_graph_part_parts(ctx, bounds, "we", KEY_MOOD_WED, KEY_MOOD_THU, center, hspacing, builder);
+  draw_graph_part_parts(ctx, bounds, "th", KEY_MOOD_THU, KEY_MOOD_FRI, center, hspacing, builder);
+  draw_graph_part_parts(ctx, bounds, "fr", KEY_MOOD_FRI, KEY_MOOD_SAT, center, hspacing, builder);  draw_graph_part_day(ctx, bounds, "sa", KEY_MOOD_SAT);
   
 #ifdef PBL_PLATFORM_BASALT
   s_path = gpath_builder_create_path(builder);
@@ -218,7 +168,7 @@ static void window_load(Window *window) {
   set_mood();
 
   // Create Layer
-  s_canvas_layer = layer_create(GRect(0, 42, bounds.size.w, bounds.size.h-42));
+  s_canvas_layer = layer_create(GRect(0, 42, bounds.size.w, (bounds.size.h-42)*2));
   layer_add_child(window_layer, s_canvas_layer);
   
   // Set the update_proc

@@ -1,6 +1,7 @@
 #include "pebble.h"
   
 #include "overview_window.h"
+#include "common.h"
 
 #define REPEAT_INTERVAL_MS 50
 
@@ -9,9 +10,6 @@
 
 // You can define defaults for values in persistent storage
 #define NUM_DRINKS_DEFAULT 0
-
-#define NUM_MOOD_MIN -10
-#define NUM_MOOD_MAX 10
 
 static Window *s_main_window;
 
