@@ -97,32 +97,31 @@ void canvas_update_proc(Layer *this_layer, GContext *ctx) {
   // Draw the mood lines
   graphics_context_set_fill_color(ctx, GColorWhite);
   
-
-#ifdef PBL_PLATFORM_APLITE
-  int middle_h = hspacing*2;
-  int other_h = (bounds.size.h/2) - middle_h;
-  int middle_y = other_h + (middle_h / 2);
+  int middle_h = ((_bounds.size.h * 10) / (10-2)) / 10 ; //hspacing*2;
+  int other_h = ((_bounds.size.h * 10) / (10-8)) / 10;//(_bounds.size.h/2) - middle_h;
+  int middle_y = other_h; //other_h + (middle_h / 2);
+  
+#ifdef PBL_BW
   graphics_context_set_stroke_color(ctx, GColorWhite);
-  //graphics_context_set_fill_color(ctx, GColorBlack);
-  graphics_draw_rect(ctx, GRect(-1, middle_y, bounds.size.w+2, middle_h));
-#elif PBL_PLATFORM_BASALT
-  int middle_h = hspacing*2;
-  int other_h = (_bounds.size.h/2) - middle_h;
-  int middle_y = other_h + (middle_h / 2);
+  //graphics_draw_rect(ctx, GRect(-1, middle_y, _bounds.size.w+2, middle_h));
+  graphics_draw_rect(ctx, GRect(-1, middle_y-hspacing, _bounds.size.w+2, middle_h+hspacing));
+#elif PBL_COLOR
   graphics_context_set_fill_color(ctx, GColorMidnightGreen);
-  graphics_fill_rect(ctx, GRect(0, 0, _bounds.size.w, other_h+hspacing), 0, GCornerNone);
+  //graphics_fill_rect(ctx, GRect(0, 0, _bounds.size.w, other_h+hspacing), 0, GCornerNone);
+  graphics_fill_rect(ctx, GRect(0, 0, _bounds.size.w, other_h-hspacing), 0, GCornerNone);
   graphics_context_set_fill_color(ctx, GColorWindsorTan);
-  graphics_fill_rect(ctx, GRect(0, middle_y, _bounds.size.w, middle_h), 0, GCornerNone);
+  graphics_fill_rect(ctx, GRect(0, middle_y-hspacing, _bounds.size.w, middle_h+hspacing), 0, GCornerNone);
   graphics_context_set_fill_color(ctx, GColorBulgarianRose);
-  graphics_fill_rect(ctx, GRect(0, middle_h+middle_y, _bounds.size.w, other_h+hspacing), 0, GCornerNone);
-#endif
+  //graphics_fill_rect(ctx, GRect(0, middle_h+middle_y, _bounds.size.w, other_h+hspacing), 0, GCornerNone);
+  graphics_fill_rect(ctx, GRect(0, middle_h+middle_y, _bounds.size.w, other_h-hspacing), 0, GCornerNone);
   
   graphics_context_set_stroke_color(ctx, GColorBlack);
+#endif
 #if PBL_PLATFORM_BASALT
   graphics_context_set_stroke_width(ctx, 1);
 #endif
-  int i = NUM_MOOD_MIN;
-  /*for (; i <= NUM_MOOD_MAX; i++) {
+  /*int i = NUM_MOOD_MIN;
+  for (; i <= NUM_MOOD_MAX; i++) {
     GPoint p0 = GPoint(0, center.y-(i*hspacing));
     GPoint p1 = GPoint(bounds.size.w, center.y-(i*hspacing));
     graphics_draw_line(ctx, p0, p1);

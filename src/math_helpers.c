@@ -1,13 +1,13 @@
 #include <pebble.h>
 #include "math_helpers.h"
   
-int compare (const void * a, const void * b)
+int math_int_compare (const void * a, const void * b)
 {
   return ( *(int*)a - *(int*)b );
 }
   
 int math_int_get_median(int values[], int length) {
-  qsort (values, length, sizeof(int), compare);
+  qsort (values, length, sizeof(int), math_int_compare);
   return values[length/2];
 }
 

@@ -2,6 +2,7 @@
   
 #include "overview_window.h"
 #include "common.h"
+#include "date_helpers.h"
 
 #define REPEAT_INTERVAL_MS 50
 
@@ -18,13 +19,6 @@ static TextLayer *s_header_layer, *s_body_layer, *s_label_layer;
 static GBitmap *s_icon_plus, *s_icon_minus;
 
 static int s_num_drinks = NUM_DRINKS_DEFAULT;
-
-static int get_weekday() {
-  time_t now = time(NULL);
-  struct tm *t = localtime(&now);
-  
-  return t->tm_wday;
-}
 
 static void update_text() {
   static char s_body_text[18];
@@ -52,7 +46,7 @@ static void decrement_click_handler(ClickRecognizerRef recognizer, void *context
 }
 
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
-  persist_write_int(get_weekday(), s_num_drinks);
+  persist_write_int(date_get_weekday(), s_num_drinks);
   overview_window_push();
 }
 
@@ -114,7 +108,7 @@ static void init() {
 
   // Get the count from persistent storage for use if it exists, otherwise use the default
   //s_num_drinks = persist_exists(NUM_DRINKS_PKEY) ? persist_read_int(NUM_DRINKS_PKEY) : NUM_DRINKS_DEFAULT;
-  s_num_drinks = persist_exists(get_weekday()) ? persist_read_int(get_weekday()) : NUM_DRINKS_DEFAULT;
+  s_num_drinks = persist_exists(date_get_weekday()) ? persist_read_int(date_get_weekday()) : NUM_DRINKS_DEFAULT;
 
   s_main_window = window_create();
   window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -126,7 +120,7 @@ static void init() {
 
 static void deinit() {
   // Save the count into persistent storage on app exit
-  persist_write_int(get_weekday(), s_num_drinks);
+  persist_write_int(date_get_weekday(), s_num_drinks);
 
   window_destroy(s_main_window);
 
