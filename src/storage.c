@@ -2,6 +2,7 @@
 #include "storage.h"
 #include "common.h"
   
+static int s_moods[7];
   
 /*void get_moods(int *output[], int length) {
   for (int i = 0; i < length; i++) {
@@ -9,7 +10,7 @@
   }
 }*/
   
-void save_mood(int key, int mood) {
+void storage_save_mood(int key, int mood) {
   switch(key) {
     case KEY_MOOD_SUN:
     case KEY_MOOD_MON:
@@ -23,15 +24,22 @@ void save_mood(int key, int mood) {
   }
 }
 
+int storage_get_mood(int key) {
+  int mood = s_moods[key];
+  if (!mood) {
+    mood = storage_read_mood(key);
+    s_moods[key] = mood;
+  }
+  return mood;
+}
 
-
-int read_mood(int key) {
+int storage_read_mood(int key) {
   // Count number of launches
   int mood = 0;
   
-  #if APP_DEBUG
-    mood = DUMMY_DATA[key];
-  #else
+#if APP_DEBUG
+  mood = DUMMY_DATA[key];
+#else
   // Check to see if a count already exists
   if (persist_exists(key)) {
     // Load stored count
@@ -66,7 +74,7 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
       case KEY_MOOD_THU:
       case KEY_MOOD_FRI:
       case KEY_MOOD_SAT:
-        save_mood(t->key, t->value->int32);
+        storage_save_mood(t->key, t->value->int32);
         break;
     }
 

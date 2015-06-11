@@ -7,14 +7,18 @@
 #define KEY_MOOD_THU 4
 #define KEY_MOOD_FRI 5
 #define KEY_MOOD_SAT 6
+  
+#define KEY_WEEKSTART 512
 
 #include "pebble.h"
   
   
-void get_moods(int *output[], int length);
-  
-void save_mood(int key, int val);
-int  read_mood(int key);
+void storage_get_moods(int *output[], int length);
+
+int storage_get_mood(int key);
+
+void storage_save_mood(int key, int val);
+int  storage_read_mood(int key);
   
 void sync_changed_handler(const uint32_t key, const Tuple *new_tuple, const Tuple *old_tuple, void *context);
 

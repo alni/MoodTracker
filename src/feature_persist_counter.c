@@ -3,50 +3,48 @@
 #include "overview_window.h"
 #include "common.h"
 #include "date_helpers.h"
+#include "storage.h"
 
 #define REPEAT_INTERVAL_MS 50
 
-// This is a custom defined key for saving our count field
-#define NUM_DRINKS_PKEY 1
-
 // You can define defaults for values in persistent storage
-#define NUM_DRINKS_DEFAULT 0
+#define NUM_MOOD_DEFAULT 0
 
 static Window *s_main_window;
-
+ 
 static ActionBarLayer *s_action_bar;
 static TextLayer *s_header_layer, *s_body_layer, *s_label_layer;
 static GBitmap *s_icon_plus, *s_icon_minus;
 
-static int s_num_drinks = NUM_DRINKS_DEFAULT;
+static int s_num_mood = NUM_MOOD_DEFAULT;
 
 static void update_text() {
   static char s_body_text[18];
-  snprintf(s_body_text, sizeof(s_body_text), "%d Steps", s_num_drinks);
+  snprintf(s_body_text, sizeof(s_body_text), "%d Steps", s_num_mood);
   text_layer_set_text(s_body_layer, s_body_text);
 }
 
 static void increment_click_handler(ClickRecognizerRef recognizer, void *context) {
-  if (s_num_drinks >= NUM_MOOD_MAX) {
+  if (s_num_mood >= NUM_MOOD_MAX) {
     return;
   }
-  s_num_drinks++;
+  s_num_mood++;
   update_text();
 }
 
 static void decrement_click_handler(ClickRecognizerRef recognizer, void *context) {
-  //if (s_num_drinks <= 0) {
-  if (s_num_drinks <= NUM_MOOD_MIN) {
+  if (s_num_mood <= NUM_MOOD_MIN) {
     // Keep the counter at zero
     return;
   }
 
-  s_num_drinks--;
+  s_num_mood--;
   update_text();
 }
 
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
-  persist_write_int(date_get_weekday(), s_num_drinks);
+  //persist_write_int(date_get_weekday(), s_num_mood);
+  storage_save_mood(date_get_weekday(), s_num_mood);
   overview_window_push();
 }
 
@@ -67,8 +65,10 @@ static void main_window_load(Window *window) {
 
   action_bar_layer_set_icon(s_action_bar, BUTTON_ID_UP, s_icon_plus);
   action_bar_layer_set_icon(s_action_bar, BUTTON_ID_DOWN, s_icon_minus);
-#ifdef PBL_PLATFORM_BASALT
+#ifdef PBL_COLOR
+  // Set the Window background color to a color that is similar to hospital walls
   window_set_background_color(window, GColorCadetBlue);
+  // Set the Window background color to a color that is similar to medical staff uniforms
   action_bar_layer_set_background_color(s_action_bar, GColorCobaltBlue);
 #endif
 
@@ -106,9 +106,9 @@ static void init() {
   s_icon_plus = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_ACTION_ICON_PLUS);
   s_icon_minus = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_ACTION_ICON_MINUS);
 
-  // Get the count from persistent storage for use if it exists, otherwise use the default
-  //s_num_drinks = persist_exists(NUM_DRINKS_PKEY) ? persist_read_int(NUM_DRINKS_PKEY) : NUM_DRINKS_DEFAULT;
-  s_num_drinks = persist_exists(date_get_weekday()) ? persist_read_int(date_get_weekday()) : NUM_DRINKS_DEFAULT;
+  // Get the mood from persistent storage for use if it exists, otherwise use the default
+  s_num_mood = storage_read_mood(date_get_weekday());
+    //persist_exists(date_get_weekday()) ? persist_read_int(date_get_weekday()) : NUM_MOOD_DEFAULT;
 
   s_main_window = window_create();
   window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -119,8 +119,10 @@ static void init() {
 }
 
 static void deinit() {
-  // Save the count into persistent storage on app exit
-  persist_write_int(date_get_weekday(), s_num_drinks);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "date_get_weekday() = %d", date_get_weekday());
+  // Save the mood into persistent storage on app exit
+  storage_save_mood(date_get_weekday(), s_num_mood);
+  //persist_write_int(date_get_weekday(), s_num_mood);
 
   window_destroy(s_main_window);
 
