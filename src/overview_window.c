@@ -6,7 +6,15 @@
 #include "gpath_builder.h"
   
 #define MAX_POINTS 512
-
+#define GRAPH_CURVE_HEIGHT 105
+#define GRAPH_POINT_SPACE 10
+#define GRAPH_AREA_GOOD_Y 0
+#define GRAPH_AREA_GOOD_H 39
+#define GRAPH_AREA_NEUTRAL_Y 39
+#define GRAPH_AREA_NEUTRAL_H 27
+#define GRAPH_AREA_BAD_Y 66
+#define GRAPH_AREA_BAD_H 39
+  
 static Window *s_main_window;
 static TextLayer *s_text_layer;
 
@@ -19,6 +27,7 @@ GFont s_res_font_days ;
 static GPath *s_path;
 static int s_moods[] = {0,0,0,0,0,0,0};
 
+static int s_mood_points[] = {105, 95, 84, 74, 63, 53, 42, 32, 21, 11, 0};
 
 void set_mood() {
   //int moods[7];
@@ -51,9 +60,11 @@ void draw_graph_part_base(GContext *ctx, GRect bounds, char* s_day, int _day0, i
     if (_day1 < 0) {_day1 += 7; }
     else if (_day1 > 6) { _day1 -= 7; }
   }
-  GPoint p0 = GPoint(12+2+(20*_day0), center.y-(_mood0*hspacing));
+  //GPoint p0 = GPoint(12+2+(20*_day0), center.y-(_mood0*hspacing));
+  GPoint p0 = GPoint(12+2+(20*_day0), s_mood_points[_mood0]);
   
-  GPoint p1 = GPoint(12+2+(20*_day1), center.y-(_mood1*hspacing));
+  //GPoint p1 = GPoint(12+2+(20*_day1), center.y-(_mood1*hspacing));
+  GPoint p1 = GPoint(12+2+(20*_day1), s_mood_points[_mood1]);
   APP_LOG(APP_LOG_LEVEL_DEBUG, "x(%d) = %d", _day0, p0.x);
 #ifdef PBL_PLATFORM_APLITE
   // On Original Pebble (Aplite) the graph is only drawn with separate lines and not as a bezier curve
@@ -113,31 +124,35 @@ void canvas_update_proc(Layer *this_layer, GContext *ctx) {
   graphics_context_set_fill_color(ctx, GColorWhite);
   
   // Draw the Mood (color) coding rectangles
-  int middle_h = ((_bounds.size.h * 10) / (10-2)) / 10 ; //hspacing*2;
-  int other_h = ((_bounds.size.h * 10) / (10-8)) / 10;//(_bounds.size.h/2) - middle_h;
-  int middle_y = other_h; //other_h + (middle_h / 2);
+  //int middle_h = ((_bounds.size.h * 10) / (10-2)) / 10 ; //hspacing*2;
+  //int other_h = ((_bounds.size.h * 10) / (10-8)) / 10;//(_bounds.size.h/2) - middle_h;
+  //int middle_y = other_h; //other_h + (middle_h / 2);
 #ifdef PBL_BW
   // On monochrome screens, only draw the middle (OK (4-6) mood) rectangle
   graphics_context_set_stroke_color(ctx, GColorWhite);
   //graphics_draw_rect(ctx, GRect(-1, middle_y, _bounds.size.w+2, middle_h));
   
-  graphics_draw_rect(ctx, GRect(-1, middle_y-hspacing, _bounds.size.w+2, middle_h+hspacing));
+  //graphics_draw_rect(ctx, GRect(-1, middle_y-hspacing, _bounds.size.w+2, middle_h+hspacing));
+  graphics_draw_rect(ctx, GRect(-1, GRAPH_AREA_NEUTRAL_Y, _bounds.size.w+2, GRAPH_AREA_NEUTRAL_H));
 #elif PBL_COLOR
   // On color screens, draw the Good, OK and Bad mood rectangles
   
   // Set the top (Good (7-10) mood) rectangle to a positive color
   graphics_context_set_fill_color(ctx, GColorMidnightGreen);
   //graphics_fill_rect(ctx, GRect(0, 0, _bounds.size.w, other_h+hspacing), 0, GCornerNone);
-  graphics_fill_rect(ctx, GRect(0, 0, _bounds.size.w, other_h-hspacing), 0, GCornerNone);
+  //graphics_fill_rect(ctx, GRect(0, 0, _bounds.size.w, other_h-hspacing), 0, GCornerNone);
+  graphics_fill_rect(ctx, GRect(0, GRAPH_AREA_GOOD_Y, _bounds.size.w, GRAPH_AREA_GOOD_H), 0, GCornerNone);
   
   // Set the middle (OK (4-6) mood) rectangle to a neutral color
   graphics_context_set_fill_color(ctx, GColorWindsorTan);
-  graphics_fill_rect(ctx, GRect(0, middle_y-hspacing, _bounds.size.w, middle_h+hspacing), 0, GCornerNone);
+  //graphics_fill_rect(ctx, GRect(0, middle_y-hspacing, _bounds.size.w, middle_h+hspacing), 0, GCornerNone);
+  graphics_fill_rect(ctx, GRect(0, GRAPH_AREA_NEUTRAL_Y, _bounds.size.w, GRAPH_AREA_NEUTRAL_H), 0, GCornerNone);
   
   // Set the bottom (Bad (0-3) mood) rectangle to a negative color
   graphics_context_set_fill_color(ctx, GColorBulgarianRose);
   //graphics_fill_rect(ctx, GRect(0, middle_h+middle_y, _bounds.size.w, other_h+hspacing), 0, GCornerNone);
-  graphics_fill_rect(ctx, GRect(0, middle_h+middle_y, _bounds.size.w, other_h-hspacing), 0, GCornerNone);
+  //graphics_fill_rect(ctx, GRect(0, middle_h+middle_y, _bounds.size.w, other_h-hspacing), 0, GCornerNone);
+  graphics_fill_rect(ctx, GRect(0, GRAPH_AREA_BAD_Y, _bounds.size.w, GRAPH_AREA_BAD_H), 0, GCornerNone);
   
   graphics_context_set_stroke_color(ctx, GColorBlack);
 #endif
@@ -164,62 +179,70 @@ void canvas_update_proc(Layer *this_layer, GContext *ctx) {
 #endif
   int current_day = date_get_weekday()+1;
   if (current_day > 6) {current_day = 0;}
-  if (current_day == 0) {
-    draw_graph_part_start(ctx, bounds, "su", KEY_MOOD_SUN, KEY_MOOD_MON, center, hspacing, builder, current_day);
-    draw_graph_part_parts(ctx, bounds, "mo", KEY_MOOD_MON, KEY_MOOD_TUE, center, hspacing, builder, current_day);
-    draw_graph_part_parts(ctx, bounds, "tu", KEY_MOOD_TUE, KEY_MOOD_WED, center, hspacing, builder, current_day);
-    draw_graph_part_parts(ctx, bounds, "we", KEY_MOOD_WED, KEY_MOOD_THU, center, hspacing, builder, current_day);
-    draw_graph_part_parts(ctx, bounds, "th", KEY_MOOD_THU, KEY_MOOD_FRI, center, hspacing, builder, current_day);
-    draw_graph_part_parts(ctx, bounds, "fr", KEY_MOOD_FRI, KEY_MOOD_SAT, center, hspacing, builder, current_day);  
-    draw_graph_part_day(ctx, bounds, "sa", KEY_MOOD_SAT);
-  } else if (current_day == 1) {
-    draw_graph_part_start(ctx, bounds, "mo", KEY_MOOD_MON, KEY_MOOD_TUE, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "tu", KEY_MOOD_TUE, KEY_MOOD_WED, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "we", KEY_MOOD_WED, KEY_MOOD_THU, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "th", KEY_MOOD_THU, KEY_MOOD_FRI, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "fr", KEY_MOOD_FRI, KEY_MOOD_SAT, center, hspacing, builder, -current_day); 
-    draw_graph_part_parts(ctx, bounds, "sa", KEY_MOOD_SAT, KEY_MOOD_SUN, center, hspacing, builder, -current_day); 
-    draw_graph_part_day(ctx, bounds, "su", KEY_MOOD_SUN-1);
-  } else if (current_day == 2) {
-    draw_graph_part_start(ctx, bounds, "tu", KEY_MOOD_TUE, KEY_MOOD_WED, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "we", KEY_MOOD_WED, KEY_MOOD_THU, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "th", KEY_MOOD_THU, KEY_MOOD_FRI, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "fr", KEY_MOOD_FRI, KEY_MOOD_SAT, center, hspacing, builder, -current_day); 
-    draw_graph_part_parts(ctx, bounds, "sa", KEY_MOOD_SAT, KEY_MOOD_SUN, center, hspacing, builder, -current_day); 
-    draw_graph_part_parts(ctx, bounds, "su", KEY_MOOD_SUN, KEY_MOOD_MON, center, hspacing, builder, -current_day);
-    draw_graph_part_day(ctx, bounds, "mo", KEY_MOOD_MON-2);
-  } else if (current_day == 3) {
-    draw_graph_part_start(ctx, bounds, "we", KEY_MOOD_WED, KEY_MOOD_THU, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "th", KEY_MOOD_THU, KEY_MOOD_FRI, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "fr", KEY_MOOD_FRI, KEY_MOOD_SAT, center, hspacing, builder, -current_day); 
-    draw_graph_part_parts(ctx, bounds, "sa", KEY_MOOD_SAT, KEY_MOOD_SUN, center, hspacing, builder, -current_day); 
-    draw_graph_part_parts(ctx, bounds, "su", KEY_MOOD_SUN, KEY_MOOD_MON, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "mo", KEY_MOOD_MON, KEY_MOOD_TUE, center, hspacing, builder, -current_day);
-    draw_graph_part_day(ctx, bounds, "tu", KEY_MOOD_TUE-3);
-  } else if (current_day == 4) {
-    draw_graph_part_start(ctx, bounds, "th", KEY_MOOD_THU, KEY_MOOD_FRI, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "fr", KEY_MOOD_FRI, KEY_MOOD_SAT, center, hspacing, builder, -current_day); 
-    draw_graph_part_parts(ctx, bounds, "sa", KEY_MOOD_SAT, KEY_MOOD_SUN, center, hspacing, builder, -current_day); 
-    draw_graph_part_parts(ctx, bounds, "su", KEY_MOOD_SUN, KEY_MOOD_MON, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "mo", KEY_MOOD_MON, KEY_MOOD_TUE, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "tu", KEY_MOOD_TUE, KEY_MOOD_WED, center, hspacing, builder, -current_day);
-    draw_graph_part_day(ctx, bounds, "we", KEY_MOOD_WED-4);
-  } else if (current_day == 5) {
-    draw_graph_part_start(ctx, bounds, "fr", KEY_MOOD_FRI, KEY_MOOD_SAT, center, hspacing, builder, -current_day); 
-    draw_graph_part_parts(ctx, bounds, "sa", KEY_MOOD_SAT, KEY_MOOD_SUN, center, hspacing, builder, -current_day); 
-    draw_graph_part_parts(ctx, bounds, "su", KEY_MOOD_SUN, KEY_MOOD_MON, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "mo", KEY_MOOD_MON, KEY_MOOD_TUE, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "tu", KEY_MOOD_TUE, KEY_MOOD_WED, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "we", KEY_MOOD_WED, KEY_MOOD_THU, center, hspacing, builder, -current_day);
-    draw_graph_part_day(ctx, bounds, "th", KEY_MOOD_THU-5);
-  } else if (current_day == 6) {
-    draw_graph_part_start(ctx, bounds, "sa", KEY_MOOD_SAT, KEY_MOOD_SUN, center, hspacing, builder, -current_day); 
-    draw_graph_part_parts(ctx, bounds, "su", KEY_MOOD_SUN, KEY_MOOD_MON, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "mo", KEY_MOOD_MON, KEY_MOOD_TUE, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "tu", KEY_MOOD_TUE, KEY_MOOD_WED, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "we", KEY_MOOD_WED, KEY_MOOD_THU, center, hspacing, builder, -current_day);
-    draw_graph_part_parts(ctx, bounds, "th", KEY_MOOD_THU, KEY_MOOD_FRI, center, hspacing, builder, -current_day); 
-    draw_graph_part_day(ctx, bounds, "fr", KEY_MOOD_FRI-6);
+  switch (current_day) {
+    case 0:
+      draw_graph_part_start(ctx, bounds, "su", KEY_MOOD_SUN, KEY_MOOD_MON, center, hspacing, builder, current_day);
+      draw_graph_part_parts(ctx, bounds, "mo", KEY_MOOD_MON, KEY_MOOD_TUE, center, hspacing, builder, current_day);
+      draw_graph_part_parts(ctx, bounds, "tu", KEY_MOOD_TUE, KEY_MOOD_WED, center, hspacing, builder, current_day);
+      draw_graph_part_parts(ctx, bounds, "we", KEY_MOOD_WED, KEY_MOOD_THU, center, hspacing, builder, current_day);
+      draw_graph_part_parts(ctx, bounds, "th", KEY_MOOD_THU, KEY_MOOD_FRI, center, hspacing, builder, current_day);
+      draw_graph_part_parts(ctx, bounds, "fr", KEY_MOOD_FRI, KEY_MOOD_SAT, center, hspacing, builder, current_day);  
+      draw_graph_part_day(ctx, bounds, "sa", KEY_MOOD_SAT);
+    break;
+    case 1:
+      draw_graph_part_start(ctx, bounds, "mo", KEY_MOOD_MON, KEY_MOOD_TUE, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "tu", KEY_MOOD_TUE, KEY_MOOD_WED, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "we", KEY_MOOD_WED, KEY_MOOD_THU, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "th", KEY_MOOD_THU, KEY_MOOD_FRI, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "fr", KEY_MOOD_FRI, KEY_MOOD_SAT, center, hspacing, builder, -current_day); 
+      draw_graph_part_parts(ctx, bounds, "sa", KEY_MOOD_SAT, KEY_MOOD_SUN, center, hspacing, builder, -current_day); 
+      draw_graph_part_day(ctx, bounds, "su", KEY_MOOD_SUN-1);
+    break;
+    case 2:
+      draw_graph_part_start(ctx, bounds, "tu", KEY_MOOD_TUE, KEY_MOOD_WED, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "we", KEY_MOOD_WED, KEY_MOOD_THU, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "th", KEY_MOOD_THU, KEY_MOOD_FRI, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "fr", KEY_MOOD_FRI, KEY_MOOD_SAT, center, hspacing, builder, -current_day); 
+      draw_graph_part_parts(ctx, bounds, "sa", KEY_MOOD_SAT, KEY_MOOD_SUN, center, hspacing, builder, -current_day); 
+      draw_graph_part_parts(ctx, bounds, "su", KEY_MOOD_SUN, KEY_MOOD_MON, center, hspacing, builder, -current_day);
+      draw_graph_part_day(ctx, bounds, "mo", KEY_MOOD_MON-2);
+    break;
+    case 3:
+      draw_graph_part_start(ctx, bounds, "we", KEY_MOOD_WED, KEY_MOOD_THU, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "th", KEY_MOOD_THU, KEY_MOOD_FRI, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "fr", KEY_MOOD_FRI, KEY_MOOD_SAT, center, hspacing, builder, -current_day); 
+      draw_graph_part_parts(ctx, bounds, "sa", KEY_MOOD_SAT, KEY_MOOD_SUN, center, hspacing, builder, -current_day); 
+      draw_graph_part_parts(ctx, bounds, "su", KEY_MOOD_SUN, KEY_MOOD_MON, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "mo", KEY_MOOD_MON, KEY_MOOD_TUE, center, hspacing, builder, -current_day);
+      draw_graph_part_day(ctx, bounds, "tu", KEY_MOOD_TUE-3);
+    break;
+    case 4:
+      draw_graph_part_start(ctx, bounds, "th", KEY_MOOD_THU, KEY_MOOD_FRI, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "fr", KEY_MOOD_FRI, KEY_MOOD_SAT, center, hspacing, builder, -current_day); 
+      draw_graph_part_parts(ctx, bounds, "sa", KEY_MOOD_SAT, KEY_MOOD_SUN, center, hspacing, builder, -current_day); 
+      draw_graph_part_parts(ctx, bounds, "su", KEY_MOOD_SUN, KEY_MOOD_MON, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "mo", KEY_MOOD_MON, KEY_MOOD_TUE, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "tu", KEY_MOOD_TUE, KEY_MOOD_WED, center, hspacing, builder, -current_day);
+      draw_graph_part_day(ctx, bounds, "we", KEY_MOOD_WED-4);
+    break;
+    case 5:
+      draw_graph_part_start(ctx, bounds, "fr", KEY_MOOD_FRI, KEY_MOOD_SAT, center, hspacing, builder, -current_day); 
+      draw_graph_part_parts(ctx, bounds, "sa", KEY_MOOD_SAT, KEY_MOOD_SUN, center, hspacing, builder, -current_day); 
+      draw_graph_part_parts(ctx, bounds, "su", KEY_MOOD_SUN, KEY_MOOD_MON, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "mo", KEY_MOOD_MON, KEY_MOOD_TUE, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "tu", KEY_MOOD_TUE, KEY_MOOD_WED, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "we", KEY_MOOD_WED, KEY_MOOD_THU, center, hspacing, builder, -current_day);
+      draw_graph_part_day(ctx, bounds, "th", KEY_MOOD_THU-5);
+    break;
+    case 6:
+      draw_graph_part_start(ctx, bounds, "sa", KEY_MOOD_SAT, KEY_MOOD_SUN, center, hspacing, builder, -current_day); 
+      draw_graph_part_parts(ctx, bounds, "su", KEY_MOOD_SUN, KEY_MOOD_MON, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "mo", KEY_MOOD_MON, KEY_MOOD_TUE, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "tu", KEY_MOOD_TUE, KEY_MOOD_WED, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "we", KEY_MOOD_WED, KEY_MOOD_THU, center, hspacing, builder, -current_day);
+      draw_graph_part_parts(ctx, bounds, "th", KEY_MOOD_THU, KEY_MOOD_FRI, center, hspacing, builder, -current_day); 
+      draw_graph_part_day(ctx, bounds, "fr", KEY_MOOD_FRI-6);
+    break;
   }
   graphics_context_set_stroke_color(ctx, GColorWhite); // Set the graph line color to white
   
