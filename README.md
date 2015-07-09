@@ -6,3 +6,9 @@ This app was developed to be used as a tool with **Cognitive Behavioural Therapy
 Stores data for the last week (last 7 days). The currently stored dataset can be viewed in an overview graph when pressing the select button.
 
 Based on the <https://github.com/pebble-examples/feature-persist-counter/> example project.
+
+## How to get it ##
+
+The app is available in the Pebble App Store:
+
+* <https://apps.getpebble.com/applications/557adc79bdeaadabcb00001b>
