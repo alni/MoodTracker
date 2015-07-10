@@ -27,3 +27,12 @@ All released versions are also available to download here on GitHub:
 4. If you want to view the mood progress during the last week, click the Select (middle) button.
     * Here you can view how the mood has changed during the last week in a overview graph.
     * You can also see the average and the median for the mood during the last week.
+
+## How to contribute ##
+
+You can contribute by
+
+* reporting bugs and issues, 
+* request new features or changes, 
+* forking the project and contributing to the code, 
+* spreading the word about this project and Pebble(!)
