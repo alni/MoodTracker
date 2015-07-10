@@ -1,5 +1,10 @@
 # MoodTracker
+
 Mood Tracking for Pebble
+
+![](screenshots/aplite_01.png) ![](screenshots/aplite_02.png)
+
+![](screenshots/basalt_01.png) ![](screenshots/basalt_02.png)
 
 This app was developed to be used as a tool with **Cognitive Behavioural Therapy** to log how the mood of the patient had been during the week.
 
