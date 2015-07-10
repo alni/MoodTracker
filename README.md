@@ -2,6 +2,10 @@
 
 Mood Tracking for Pebble
 
+![](https://www.filepicker.io/api/file/VNfGr1mzT1Sd4svU1nvG/convert?h=160&w=360)
+
+## Description ##
+
 ![](screenshots/aplite_01.png) ![](screenshots/aplite_02.png)
 
 ![](screenshots/basalt_01.png) ![](screenshots/basalt_02.png)
