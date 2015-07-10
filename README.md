@@ -12,3 +12,7 @@ Based on the <https://github.com/pebble-examples/feature-persist-counter/> examp
 The app is available in the Pebble App Store:
 
 * <https://apps.getpebble.com/applications/557adc79bdeaadabcb00001b>
+
+All released versions are also available to download here on GitHub:
+
+* <https://github.com/alni/MoodTracker/releases>
