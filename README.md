@@ -10,7 +10,11 @@ This app was developed to be used as a tool with **Cognitive Behavioural Therapy
 
 Stores data for the last week (last 7 days). The currently stored dataset can be viewed in an overview graph when pressing the select button.
 
+## Acknowledgement ##
+
 Based on the <https://github.com/pebble-examples/feature-persist-counter/> example project.
+
+The app logo and banner is based on the **Healthcare free vector** [Designed by Freepik](http://www.freepik.com/free-vector/healthcare-free-vector-banners_713583.htm)
 
 ## How to get it ##
 
