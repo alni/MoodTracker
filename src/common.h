@@ -1,6 +1,7 @@
 #pragma once
 
 #define APP_DEBUG false
+#define DEBUG_DAY 6
   
 #define NUM_MOOD_MIN 0
 #define NUM_MOOD_MAX 10

@@ -23,3 +23,12 @@ int math_int_find_bezier_control_point(int p, int t) {
   return (((p * 100) - (100 - t)) / t);
 }
 
+int math_int_normalize(int value, int min, int max) {
+  if (value < min) {
+    value = max;
+  } else if (value > max) {
+    value = min;
+  }
+  return value;
+}
+

@@ -56,7 +56,7 @@ void sync_changed_handler(const uint32_t key, const Tuple *new_tuple, const Tupl
   //text_layer_set_text(s_output_layer, s_count_buffer);
 }
 
-void inbox_received_callback(DictionaryIterator *iterator, void *context) {
+/*void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   // Get the first pair
   Tuple *t = dict_read_first(iterator);
 
@@ -81,17 +81,17 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
     // Get next pair, if any
     t = dict_read_next(iterator);
   }
-}
+}*/
 
-void inbox_dropped_callback(AppMessageResult reason, void *context) {
+/*void inbox_dropped_callback(AppMessageResult reason, void *context) {
   APP_LOG(APP_LOG_LEVEL_ERROR, "Message dropped!");
-}
+}*/
 
-void outbox_failed_callback(DictionaryIterator *iterator, AppMessageResult reason, void *context) {
+/*void outbox_failed_callback(DictionaryIterator *iterator, AppMessageResult reason, void *context) {
   APP_LOG(APP_LOG_LEVEL_ERROR, "Outbox send failed!");
-}
+}*/
 
-void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
+/*void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
   APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success!");
-}
+}*/
 
