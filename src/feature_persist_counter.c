@@ -6,6 +6,8 @@
 #include "storage.h"
 
 #define REPEAT_INTERVAL_MS 50
+#define LAUNCH_ARG_LOG 15
+#define LAUNCH_ARG_REVIEW 22
 
 // You can define defaults for values in persistent storage
 #define NUM_MOOD_DEFAULT 0
@@ -138,7 +140,20 @@ static void init() {
     .load = main_window_load,
     .unload = main_window_unload,
   });
-  window_stack_push(s_main_window, true);
+  if(launch_reason() == APP_LAUNCH_TIMELINE_ACTION) {
+    uint32_t arg = launch_get_args();
+  
+    switch(arg) {
+    case LAUNCH_ARG_LOG:
+      window_stack_push(s_main_window, true);
+      break;
+    case LAUNCH_ARG_REVIEW:
+      overview_window_push();
+      break;
+    }
+  } else {
+    window_stack_push(s_main_window, true);
+  }
 }
 
 static void deinit() {
