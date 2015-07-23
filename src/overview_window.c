@@ -7,6 +7,8 @@
 
 #define TOP_TEXT_H 42
 #define MAX_POINTS 512
+  
+
 #define GRAPH_CURVE_HEIGHT 105
 #define GRAPH_POINT_SPACE 10
 #define GRAPH_AREA_GOOD_Y 0
@@ -16,6 +18,7 @@
 #define GRAPH_AREA_BAD_Y 66
 #define GRAPH_AREA_BAD_H 39
 #define GRAPH_AREA_LABELS_H 21
+
   
 static Window *s_main_window;
 static TextLayer *s_text_layer;
@@ -360,6 +363,9 @@ void overview_window_push() {
     s_res_font_days = fonts_get_system_font(FONT_KEY_GOTHIC_18  );
     
     s_main_window = window_create();
+  #ifdef PBL_PLATFORM_APLITE
+    window_set_fullscreen(s_main_window, true);
+  #endif
     window_set_window_handlers(s_main_window, (WindowHandlers) {
         .load = window_load,
         .unload = window_unload,

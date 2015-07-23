@@ -9,14 +9,15 @@ var MoodTracker = (function() {
           "type": "genericNotification",
           "title": "New Item",
           "tinyIcon": "system://images/NOTIFICATION_FLAG",
-          "body": "A new appointment has been added to your calendar at 4pm."
+          "body": "A new Mood Tracker pin has been added to your timeline."
         }
       },
       "layout": {
         "title": "Mood Tracker",
         "type": "genericPin",
         "tinyIcon": "system://images/NOTIFICATION_REMINDER",
-        "body": "Remember to log your mood."
+        "body": "Remember to log your mood.",
+        "backgroundColor": "#55AAAA"
       },
       "reminders": [],
       "actions": [
@@ -53,12 +54,28 @@ var MoodTracker = (function() {
     createPin : function(time, duration) {
       var pin = createPin(time, duration);
       var reminderTime = new Date();
-      var reminderHour = time.getHours();
+      var reminderHour = reminderTime.getHours();
+      //var reminderHour = time.getHours();
       //pin.reminders.push(createReminder(reminderHour));
       pin.reminders.push(createReminder(10));
       pin.reminders.push(createReminder(14));
       pin.reminders.push(createReminder(18));
       pin.reminders.push(createReminder(22));
+      if(Pebble.getActiveWatchInfo) {
+        // Available for use!
+        var watch = Pebble.getActiveWatchInfo();
+        console.log(watch.model);
+        if (watch.model.indexOf("qemu") >= 0) {
+          for (var i = reminderHour; i < reminderHour+1; i++) {
+            for (var j = 0; j < 59; j+=5) {
+              pin.reminders.push(createReminder(i, j));
+            }
+          }
+        }
+      } else {
+        // Not available, handle gracefully
+      
+      }
       
       return pin;
     }

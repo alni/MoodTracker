@@ -65,6 +65,7 @@ static void click_config_provider(void *context) {
 
 static void main_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "window height = %d", layer_get_frame(window_layer).size.h);
 
   s_action_bar = action_bar_layer_create();
   action_bar_layer_add_to_window(s_action_bar, window);
@@ -77,8 +78,8 @@ static void main_window_load(Window *window) {
   // Set the Window background color to a color that is similar to hospital 
   // walls
   window_set_background_color(window, GColorCadetBlue);
-  // Set the Window background color to a color that is similar to medical staff 
-  // uniforms
+  // Set the actionbar background color to a color that is similar to medical 
+  // staff uniforms
   action_bar_layer_set_background_color(s_action_bar, GColorCobaltBlue);
 #endif
 

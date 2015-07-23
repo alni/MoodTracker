@@ -1,6 +1,6 @@
 #pragma once
 
-#define APP_DEBUG false
+#define APP_DEBUG true
 #define DEBUG_DAY 3
   
 #define NUM_MOOD_MIN 0
@@ -10,7 +10,7 @@
 #if APP_DEBUG
 static int DUMMY_DATA[] = {
   //-3, 2, 5, 0, 10, 1, -10
-  //4, 6, 8, 5, 10, 6, 0
-  7, 8, 7, 7, 5, 6, 5
+  4, 6, 8, 5, 10, 6, 0
+  //7, 8, 7, 7, 5, 6, 5
 };
 #endif
