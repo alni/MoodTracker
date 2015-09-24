@@ -48,9 +48,41 @@ var MoodTracker = (function() {
       }
     };
   };
+  
+  var MoodTrackerPin = function(time, duration, reminders) {
+    this.time = time;
+    this.duration = duration;
+    this.id = parseInt(+time / 3600000);
+    this.reminders = reminders || [10, 14, 18, 22];
+  };
+  
+  MoodTrackerPin.prototype.getPin = function() {
+    var time = this.time,
+        reminders = this.reminders,
+        l = reminders.length,
+        i = 0;
+    var pin = createPin(time, this.duration);
+    delete pin.createNotification;
+    for (; i < l; i++) {
+      pin.reminders.push(createReminder(time, reminders[i]));
+    }
+    return pin;
+  };
+  MoodTrackerPin.prototype.insertPin = function() {
+    if (!this.onInserted) {
+      this.onInserted = function() {};
+    }
+    var pin = this.getPin();
+    console.log('Inserting pin in the future: ' + JSON.stringify(pin));
+    insertUserPin(pin, this.onInserted);
+    return this;
+  };
 
 
   return {
+    Pin : (function() {
+      return MoodTrackerPin;
+    })(),
     createPin : function(time, duration) {
       var pin = createPin(time, duration);
       var reminderTime = new Date();
@@ -121,29 +153,62 @@ Pebble.addEventListener('ready', function() {
   endTime.setMinutes(59);
   
   
-  
-  var duration = +endTime - (+time);
-  var pin = MoodTracker.createPin(time, parseInt(duration / 60000));
+  var times = [],
+      i = 0,
+      _time = null,
+      hours = [10, 14, 18, 22],
+      j = 0;
+  for (i = 0; i < 3; i++) {
+    for (j = 0; j < hours.length; j++) {
+      _time = new Date(+time);
+      _time.setDate(_time.getDate() + i);
+      _time.setHours(hours[j]);
+      console.log(_time.toString());
+      times.push(_time); 
+    }
+  }
+  //var duration = +endTime - (+time);
+  //duration = parseInt(duration / 60000);
+  //var pin = MoodTracker.createPin(time, parseInt(duration / 60000));
+  var duration = 3600;
+  var index = 0;
+  var length = times.length;
+  var completed = 0;
+  var results = new Array(length);
+  var pin = new MoodTracker.Pin(times[i], duration, [times[i].getHours()]);
+  pin.onInserted = function(responseText) {
+    results[completed] = responseText;
+    if (++completed === length) {
+      console.log('Result: ' + results.join(' ; '));
+    } else {
+      pin.time = times[completed];
+      pin.reminders = [times[completed].getHours()];
+      pin = pin.insertPin();
+    }
+  };
   console.log('Inserting pin in the future: ' + JSON.stringify(pin));
   
   // Insert for today
-  insertUserPin(pin, function(responseText) { 
+  pin = pin.insertPin();
+  /*insertUserPin(pin, function(responseText) { 
     console.log('Result: ' + responseText);
     
     // Insert for tomorrow
     time.setDate(time.getDate() + 1);
-    pin = MoodTracker.createPin(time, parseInt(duration / 60000));
+    pin = new MoodTracker.Pin(time, duration).getPin();
+    //pin = MoodTracker.createPin(time, parseInt(duration / 60000));
     insertUserPin(pin, function(responseText) { 
       console.log('Result: ' + responseText);
     
       // Insert for day after tomorrow
       time.setDate(time.getDate() + 1);
-      pin = MoodTracker.createPin(time, parseInt(duration / 60000));
+      pin = new MoodTracker.Pin(time, duration).getPin(); 
+      //pin = MoodTracker.createPin(time, parseInt(duration / 60000));
       insertUserPin(pin, function(responseText) { 
         console.log('Result: ' + responseText);
       });
     });
-  });
+  });*/
 });
 
 /******************************* timeline lib *********************************/
