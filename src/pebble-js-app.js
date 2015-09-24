@@ -1,7 +1,7 @@
 var MoodTracker = (function() {
   var createPin = function(time, duration) {
     return {
-      "id": "moodtracker-453923",
+      "id": "moodtracker-" + (parseInt(+time/(1000 * 60 * 60))),
       "time": time.toISOString(),
       "duration": duration,
       "createNotification": {
@@ -35,8 +35,8 @@ var MoodTracker = (function() {
     };
   };
 
-  var createReminder = function(hour, minute) {
-    var time = new Date();
+  var createReminder = function(currentTime, hour, minute) {
+    var time = new Date(+currentTime);
     time.setHours(hour);
     time.setMinutes(minute || 0);
     return {
@@ -57,20 +57,20 @@ var MoodTracker = (function() {
       var reminderHour = reminderTime.getHours();
       //var reminderHour = time.getHours();
       //pin.reminders.push(createReminder(reminderHour));
-      pin.reminders.push(createReminder(10));
-      pin.reminders.push(createReminder(14));
-      pin.reminders.push(createReminder(18));
-      pin.reminders.push(createReminder(22));
+      pin.reminders.push(createReminder(time, 10));
+      pin.reminders.push(createReminder(time, 14));
+      pin.reminders.push(createReminder(time, 18));
+      pin.reminders.push(createReminder(time, 22));
       if(Pebble.getActiveWatchInfo) {
         // Available for use!
         var watch = Pebble.getActiveWatchInfo();
         console.log(watch.model);
         if (watch.model.indexOf("qemu") >= 0) {
-          for (var i = reminderHour; i < reminderHour+1; i++) {
+          /*for (var i = reminderHour; i < reminderHour+1; i++) {
             for (var j = 0; j < 59; j+=5) {
-              pin.reminders.push(createReminder(i, j));
+              pin.reminders.push(createReminder(time, i, j));
             }
-          }
+          }*/
         }
       } else {
         // Not available, handle gracefully
@@ -119,14 +119,30 @@ Pebble.addEventListener('ready', function() {
   time.setMinutes(0);
   endTime.setHours(22);
   endTime.setMinutes(59);
+  
+  
+  
   var duration = +endTime - (+time);
   var pin = MoodTracker.createPin(time, parseInt(duration / 60000));
-  
-
   console.log('Inserting pin in the future: ' + JSON.stringify(pin));
-
+  
+  // Insert for today
   insertUserPin(pin, function(responseText) { 
     console.log('Result: ' + responseText);
+    
+    // Insert for tomorrow
+    time.setDate(time.getDate() + 1);
+    pin = MoodTracker.createPin(time, parseInt(duration / 60000));
+    insertUserPin(pin, function(responseText) { 
+      console.log('Result: ' + responseText);
+    
+      // Insert for day after tomorrow
+      time.setDate(time.getDate() + 1);
+      pin = MoodTracker.createPin(time, parseInt(duration / 60000));
+      insertUserPin(pin, function(responseText) { 
+        console.log('Result: ' + responseText);
+      });
+    });
   });
 });
 
