@@ -1,7 +1,63 @@
+/*
+Mood Tracker v1.2
+https://github.com/alni/MoodTracker/
+----------------------
+The MIT License (MIT)
+
+Copyright (c) 2015 Alexander Nilsen
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+--------------------
+src/pebble-js-app.js
+*/
+
+
+/**
+ * @namespace
+ */
 var MoodTracker = (function() {
+  var formatNumber = function (num) {
+    return num < 10 ? "0" + num : "" + num;
+  };
+  /**
+   * Generate Pin ID with a format based on the date
+   * @param {Date} time - the time object to use
+   * @returns {string} returns the ID with the format:
+   *     "moodtracker-YYYY-MM-DD-HH"
+   */
+  var generatePinId = function(time) {
+    var hours = formatNumber(time.getHours()),
+        dom = formatNumber(time.getDate()),
+        month = formatNumber(time.getMonth()),
+        year = time.getFullYear();
+    
+    return ["moodtracker", year, month, dom, hours].join("-");
+  };
+  /**
+   * Creates a Timeline Pin from a given time and duration
+   * @param {Date} time - the time for the pin
+   * @param {integer} duration - the duration of the pin in seconds
+   * @returns {object} a Timeline Pin object
+   */
   var createPin = function(time, duration) {
     return {
-      "id": "moodtracker-" + (parseInt(+time/(1000 * 60 * 60))),
+      "id": generatePinId(time),
       "time": time.toISOString(),
       "duration": duration,
       "createNotification": {
@@ -34,7 +90,14 @@ var MoodTracker = (function() {
       ]
     };
   };
-
+  
+  /**
+   * Creates a Timeline Pin reminder object
+   * @param {Date} currentTime - the time to use as a base for the reminder
+   * @param {integer} hour - the hour to set the reminder for
+   * @param {integer} [minute] - the minute to set the reminder for
+   * @returns {Object} a Timeline Pin reminder object
+   */
   var createReminder = function(currentTime, hour, minute) {
     var time = new Date(+currentTime);
     time.setHours(hour);
@@ -49,25 +112,42 @@ var MoodTracker = (function() {
     };
   };
   
+  /**
+   * Constructs a new MoodTracker Pin
+   * @class Pin
+   * @memberof MoodTracker
+   * @param {Date} time - the time to use for the pin
+   * @param {integer} duration - the duration of the pin in seconds
+   * @param {integer[]} reminders - the list of reminder hours for the pin
+   */
   var MoodTrackerPin = function(time, duration, reminders) {
     this.time = time;
     this.duration = duration;
-    this.id = parseInt(+time / 3600000);
+    this.id = generatePinId(time);
     this.reminders = reminders || [10, 14, 18, 22];
   };
   
+  /**
+   * Creates a Timeline Pin
+   * @returns {Object} a Timeline Pin object
+   */
   MoodTrackerPin.prototype.getPin = function() {
     var time = this.time,
         reminders = this.reminders,
         l = reminders.length,
-        i = 0;
-    var pin = createPin(time, this.duration);
+        i = 0,
+        pin = createPin(time, this.duration);
     delete pin.createNotification;
-    for (; i < l; i++) {
+    for (i = 0; i < l; i++) {
       pin.reminders.push(createReminder(time, reminders[i]));
     }
     return pin;
   };
+  /**
+   * Inserts the MoodTracker pin to the timeline
+   * @fires MoodTracker.Pin#onInserted
+   * @returns {MoodTracker.Pin} itself (allows chaining)
+   */
   MoodTrackerPin.prototype.insertPin = function() {
     if (!this.onInserted) {
       this.onInserted = function() {};
@@ -78,15 +158,24 @@ var MoodTracker = (function() {
     return this;
   };
 
-
   return {
+    /**
+     * @lends MoodTracker.Pin
+     */
     Pin : (function() {
       return MoodTrackerPin;
     })(),
+    /**
+     * Creates a Timeline Pin
+     * @memberof MoodTracker
+     * @param {Date} time - the time to use for the pin
+     * @param {integer} duration - the duration of the pin in seconds
+     * @returns {object} a Timeline Pin object
+     */
     createPin : function(time, duration) {
-      var pin = createPin(time, duration);
-      var reminderTime = new Date();
-      var reminderHour = reminderTime.getHours();
+      var pin = createPin(time, duration),
+          reminderTime = new Date(),
+          reminderHour = reminderTime.getHours();
       //var reminderHour = time.getHours();
       //pin.reminders.push(createReminder(reminderHour));
       pin.reminders.push(createReminder(time, 10));
@@ -114,51 +203,25 @@ var MoodTracker = (function() {
   };
 })();
 
+
+var NUM_DAYS = 7; // Number of days to create pins for
+
 Pebble.addEventListener('ready', function() {
   console.log('PebbleKit JS ready!');
-
-  // An hour ahead
-  //var date = new Date();
-  //date.setHours(date.getHours() + 1);
-
-  // Create the pin
-  /*var pin = {
-    "id": "pin-" + Math.round((Math.random() * 100000)),
-    "time": date.toISOString(),
-    "layout": {
-      "type": "genericPin",
-      "title": "Example Pin",
-      "tinyIcon": "system://images/SCHEDULED_EVENT"
-    }
-  };*/
-  var time = new Date();
-  var currentHours = time.getHours();
-  var endTime = new Date();
-  /*if (currentHours > 18) {
-    time.setHours(22);
-    endTime.setHours(23);
-  } else if (currentHours > 14) {
-    time.setHours(18);
-    endTime.setHours(21);
-  } else if (currentHours > 10) {
-    time.setHours(14);
-    endTime.setHours(17);
-  } else {
-    time.setHours(10);
-    endTime.setHours(13);
-  }*/
+  var time = new Date(),
+      duration = 3600, // 1 hour
+      times = [],
+      hours = [10, 14, 18, 22],
+      _time = null,
+      i = 0,
+      j = 0,
+      length = 0,
+      completed = 0,
+      results = null,
+      pin = null;
   time.setHours(10);
   time.setMinutes(0);
-  endTime.setHours(22);
-  endTime.setMinutes(59);
-  
-  
-  var times = [],
-      i = 0,
-      _time = null,
-      hours = [10, 14, 18, 22],
-      j = 0;
-  for (i = 0; i < 3; i++) {
+  for (i = 0; i < NUM_DAYS; i++) {
     for (j = 0; j < hours.length; j++) {
       _time = new Date(+time);
       _time.setDate(_time.getDate() + i);
@@ -167,15 +230,9 @@ Pebble.addEventListener('ready', function() {
       times.push(_time); 
     }
   }
-  //var duration = +endTime - (+time);
-  //duration = parseInt(duration / 60000);
-  //var pin = MoodTracker.createPin(time, parseInt(duration / 60000));
-  var duration = 3600;
-  var index = 0;
-  var length = times.length;
-  var completed = 0;
-  var results = new Array(length);
-  var pin = new MoodTracker.Pin(times[i], duration, [times[i].getHours()]);
+  length = times.length;
+  results = new Array(length);
+  pin = new MoodTracker.Pin(times[0], duration, [times[0].getHours()]);
   pin.onInserted = function(responseText) {
     results[completed] = responseText;
     if (++completed === length) {
@@ -186,29 +243,10 @@ Pebble.addEventListener('ready', function() {
       pin = pin.insertPin();
     }
   };
-  console.log('Inserting pin in the future: ' + JSON.stringify(pin));
+  //onsole.log('Inserting pin in the future: ' + JSON.stringify(pin));
   
   // Insert for today
   pin = pin.insertPin();
-  /*insertUserPin(pin, function(responseText) { 
-    console.log('Result: ' + responseText);
-    
-    // Insert for tomorrow
-    time.setDate(time.getDate() + 1);
-    pin = new MoodTracker.Pin(time, duration).getPin();
-    //pin = MoodTracker.createPin(time, parseInt(duration / 60000));
-    insertUserPin(pin, function(responseText) { 
-      console.log('Result: ' + responseText);
-    
-      // Insert for day after tomorrow
-      time.setDate(time.getDate() + 1);
-      pin = new MoodTracker.Pin(time, duration).getPin(); 
-      //pin = MoodTracker.createPin(time, parseInt(duration / 60000));
-      insertUserPin(pin, function(responseText) { 
-        console.log('Result: ' + responseText);
-      });
-    });
-  });*/
 });
 
 /******************************* timeline lib *********************************/
