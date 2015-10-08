@@ -14,19 +14,48 @@ function getQueryParam(variable, defaultValue) {
   return defaultValue || false;
 }
 
+function loadConfigData() {
+  var $mood_min = $("#mood_min");
+  var $mood_max = $("#mood_max");
+  var $mood_step = $("#mood_step");
+  if (localStorage["mood_min"]) {
+    $mood_min.val(localStorage["mood_min"])
+  }
+  if (localStorage["mood_max"]) {
+    $mood_max.val(localStorage["mood_max"])
+  }
+  if (localStorage["mood_step"]) {
+    $mood_step.val(localStorage["mood_step"])
+  }
+}
+
+function getConfigData() {
+  var $mood_min = $("#mood_min");
+  var $mood_max = $("#mood_max");
+  var $mood_step = $("#mood_step");
+
+  var options = {
+    "mood_min": +$mood_min.val(),
+    "mood_max": +$mood_max.val(),
+    "mood_step": +$mood_step.val()
+  };
+
+  // Save for next launch
+  localStorage["mood_min"] = options["mood_min"] + "";
+  localStorage["mood_max"] = options["mood_max"] + "";
+  localStorage["mood_step"] = options["mood_step"] + "";
+
+  console.log("Got options: " + JSON.stringify(options));
+  return options;
+}
+
 
 $(document).ready(function() {
-
+  loadConfigData();
   $("#submit_button").on("click", function(oEvent) {
     oEvent.preventDefault();
-    var config = {
-      "mood_min": +$("#mood_min").val(),
-      "mood_max": +$("#mood_max").val(),
-      "mood_step": +$("#mood_step").val()
-    };
-    console.log(config);
     // Set the return URL depending on the runtime environment
     var return_to = getQueryParam('return_to', 'pebblejs://close#');
-    document.location = return_to + encodeURIComponent(JSON.stringify(config));
+    document.location = return_to + encodeURIComponent(JSON.stringify(getConfigData()));
   });
 });
