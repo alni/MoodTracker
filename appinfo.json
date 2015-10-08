@@ -1,5 +1,10 @@
 {
-    "appKeys": {},
+    "appKeys": {
+        "MOOD_MAX": 1002,
+        "MOOD_MIN": 1001,
+        "MOOD_STEP": 1003,
+        "REMINDER_DAYS": 2001
+    },
     "capabilities": [
         "configurable"
     ],

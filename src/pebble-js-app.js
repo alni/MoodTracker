@@ -27,6 +27,37 @@ SOFTWARE.
 src/pebble-js-app.js
 */
 
+var moodMinSetting = 'mood_min';
+var moodMaxSetting = 'mood_max';
+var moodStepSetting = 'mood_step';
+var reminderDaysSetting = 'reminder_days';
+
+Pebble.addEventListener('showConfiguration', function(e) {
+  // Show config page
+  Pebble.openURL('https://alni.github.io/MoodTracker/pebble/config.html');
+});
+
+Pebble.addEventListener('webviewclosed', function(e) {
+  // Decode and parse config data as JSON
+  var config_data = JSON.parse(decodeURIComponent(e.response));
+  console.log('Config window returned: ' + JSON.stringify(config_data));
+  
+  // Prepare AppMessage payload
+  var dict = {
+    "KEY_MOOD_MIN": config_data[moodMinSetting],
+    "KEY_MOOD_MAX": config_data[moodMaxSetting],
+    "KEY_MOOD_STEP": config_data[moodStepSetting],
+    "KEY_REMINDER_DAYS": config_data[reminderDaysSetting]
+  };
+  
+  // Send settings to Pebble watchapp
+  Pebble.sendAppMessage(dict, function() {
+    console.log('Sent config data to Pebble');
+  }, function() {
+    console.log('Failed to send config data!');
+  });
+});
+
 
 /**
  * @namespace
@@ -125,6 +156,7 @@ var MoodTracker = (function() {
     this.duration = duration;
     this.id = generatePinId(time);
     this.reminders = reminders || [10, 14, 18, 22];
+    this.debug = false;
   };
   
   /**
@@ -153,7 +185,9 @@ var MoodTracker = (function() {
       this.onInserted = function() {};
     }
     var pin = this.getPin();
-    console.log('Inserting pin in the future: ' + JSON.stringify(pin));
+    if (this.debug) {
+      console.log('Inserting pin in the future: ' + JSON.stringify(pin));
+    }
     insertUserPin(pin, this.onInserted);
     return this;
   };
