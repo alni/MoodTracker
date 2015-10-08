@@ -58,6 +58,10 @@ GFont s_res_bitham_42_light;
 GFont s_res_font_days ;
 
 static GPath *s_path;
+static int s_mood_min = NUM_MOOD_MIN;
+static int s_mood_max = NUM_MOOD_MAX;
+static int s_mood_step = NUM_MOOD_STEP;
+static int s_num_moods = NUM_MOOD_MAX;
 static int s_moods[] = {0,0,0,0,0,0,0};
 
 static int s_mood_points[] = {105, 95, 84, 74, 63, 53, 42, 32, 21, 11, 0};
@@ -174,6 +178,23 @@ void draw_graph_part_base(GContext *ctx, int bounds_size_h, char* s_day,
   
   int mood0 = storage_get_mood(day0);
   int mood1 = storage_get_mood(day1);
+  if (s_num_moods > 10) {
+    // If the number of moods is greater than 10 we need to re-calculate the
+    // moods to keep them within the 0 - 10 range of the graph.
+    
+    // Shift the moods to keep them above or equal to 0:
+    // - If Minimum Mood is less than 0 then the absolute min value is added
+    //   to the moods ("minus minus equals pluss")
+    // - If the Minimum Mood is greater then 0 then the min value is 
+    //   subtracted from the moods
+    mood0 = mood0 - s_mood_min; // Shift to positive
+    mood1 = mood1 - s_mood_min; // Shift to positive
+    
+    // Divide the mmods by a 10nth of Number of Moods. This ensures that the
+    // moods always are within the 0 - 10 range of the graph.
+    mood0 = mood0 / (s_num_moods / 10); // divide by 10nth of num moods
+    mood1 = mood1 / (s_num_moods / 10); // divide by 10nth of num moods
+  }
   
   if (day_shift != 0) {
     day0 += day_shift;
@@ -359,6 +380,11 @@ static void window_load(Window *window) {
                       fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
   layer_add_child(window_layer, (Layer *)s_text_layer);
   set_mood();
+  
+  s_mood_min = storage_read_int(KEY_MOOD_MIN, NUM_MOOD_MIN);
+  s_mood_max = storage_read_int(KEY_MOOD_MAX, NUM_MOOD_MAX);
+  s_mood_step = storage_read_int(KEY_MOOD_STEP, NUM_MOOD_STEP);
+  s_num_moods = (abs(s_mood_min) + s_mood_max);
 
   // Create Graph Canvas Layer
   s_canvas_layer = layer_create(GRect(0, TOP_TEXT_H, bounds.size.w, 

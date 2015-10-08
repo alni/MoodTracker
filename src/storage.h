@@ -45,7 +45,8 @@ src/storage.h
 #define KEY_REMINDER_DAYS 2001
 
 #include "pebble.h"
-  
+
+int  storage_read_int(int key, int def);
   
 void storage_get_moods(int *output[], int length);
 

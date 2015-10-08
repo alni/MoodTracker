@@ -34,6 +34,7 @@ src/common.h
   
 #define NUM_MOOD_MIN 0
 #define NUM_MOOD_MAX 10
+#define NUM_MOOD_STEP 1
 #define NUM_MOOD_STEPS abs(NUM_MOOD_MIN) + abs(NUM_MOOD_MAX)
   
 #if APP_DEBUG

@@ -48,6 +48,9 @@ static TextLayer *s_header_layer, *s_body_layer, *s_label_layer;
 static GBitmap *s_icon_plus, *s_icon_minus;
 
 static int s_num_mood = NUM_MOOD_DEFAULT;
+static int s_mood_min = NUM_MOOD_MIN;
+static int s_mood_max = NUM_MOOD_MAX;
+static int s_mood_step = NUM_MOOD_STEP;
 
 static void update_text() {
   static char s_body_text[18];
@@ -57,21 +60,21 @@ static void update_text() {
 
 static void increment_click_handler(ClickRecognizerRef recognizer, 
                                     void *context) {
-  if (s_num_mood >= NUM_MOOD_MAX) {
+  if (s_num_mood >= s_mood_max) {
     return;
   }
-  s_num_mood++;
+  s_num_mood += s_mood_step;
   update_text();
 }
 
 static void decrement_click_handler(ClickRecognizerRef recognizer, 
                                     void *context) {
-  if (s_num_mood <= NUM_MOOD_MIN) {
+  if (s_num_mood <= s_mood_min) {
     // Keep the counter at zero
     return;
   }
 
-  s_num_mood--;
+  s_num_mood -= s_mood_step;
   update_text();
 }
 
@@ -159,7 +162,11 @@ static void init() {
     RESOURCE_ID_IMAGE_ACTION_ICON_PLUS);
   s_icon_minus = gbitmap_create_with_resource(
     RESOURCE_ID_IMAGE_ACTION_ICON_MINUS);
-
+  
+  s_mood_min = storage_read_int(KEY_MOOD_MIN, NUM_MOOD_MIN);
+  s_mood_max = storage_read_int(KEY_MOOD_MAX, NUM_MOOD_MAX);
+  s_mood_step = storage_read_int(KEY_MOOD_STEP, NUM_MOOD_STEP);
+  
   // Get the mood from persistent storage for use if it exists, otherwise use 
   // the default
   s_num_mood = storage_read_mood(date_get_weekday());

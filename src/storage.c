@@ -32,6 +32,20 @@ src/storage.c
 #include "common.h"
   
 static int s_moods[7];
+
+int storage_read_int(int key, int def) {
+  // Count number of launches
+  int val = 0;
+
+  // Check to see if a key already exists
+  if (persist_exists(key)) {
+    // Load stored int
+    val = persist_read_int(key);
+  } else {
+    val = def;
+  }
+  return val;
+}
   
 /*void get_moods(int *output[], int length) {
   for (int i = 0; i < length; i++) {
