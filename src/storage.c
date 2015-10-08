@@ -85,6 +85,35 @@ void sync_changed_handler(const uint32_t key, const Tuple *new_tuple, const Tupl
   //text_layer_set_text(s_output_layer, s_count_buffer);
 }
 
+void inbox_received_callback(DictionaryIterator *iterator, void *context) {
+  // Mood Min value:
+  Tuple *mood_min_t = dict_find(iterator, KEY_MOOD_MIN);
+  
+  // Mood Max value:
+  Tuple *mood_max_t = dict_find(iterator, KEY_MOOD_MAX);
+  
+  // Mood Step value:
+  Tuple *mood_step_t = dict_find(iterator, KEY_MOOD_STEP);
+  
+  if (mood_min_t) {
+    int mood_min = mood_min_t->value->int32;
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Mood Min = %d", mood_min);
+    persist_write_int(KEY_MOOD_MIN, mood_min);
+  }
+  
+  if (mood_max_t) {
+    int mood_max = mood_max_t->value->int32;
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Mood Max = %d", mood_max);
+    persist_write_int(KEY_MOOD_MAX, mood_max);
+  }
+  
+  if (mood_step_t) {
+    int mood_step = mood_step_t->value->int32;
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Mood Step = %d", mood_step);
+    persist_write_int(KEY_MOOD_STEP, mood_step);
+  }
+}
+
 /*void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   // Get the first pair
   Tuple *t = dict_read_first(iterator);

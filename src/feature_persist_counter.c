@@ -184,6 +184,9 @@ static void init() {
   } else {
     window_stack_push(s_main_window, true);
   }
+  
+  app_message_register_inbox_received(inbox_received_callback);
+  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
 }
 
 static void deinit() {

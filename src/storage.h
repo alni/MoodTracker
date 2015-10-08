@@ -38,6 +38,11 @@ src/storage.h
 #define KEY_MOOD_SAT 6
   
 #define KEY_WEEKSTART 512
+  
+#define KEY_MOOD_MIN 1001
+#define KEY_MOOD_MAX 1002
+#define KEY_MOOD_STEP 1003
+#define KEY_REMINDER_DAYS 2001
 
 #include "pebble.h"
   

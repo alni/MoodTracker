@@ -1,9 +1,9 @@
 {
     "appKeys": {
-        "MOOD_MAX": 1002,
-        "MOOD_MIN": 1001,
-        "MOOD_STEP": 1003,
-        "REMINDER_DAYS": 2001
+        "KEY_MOOD_MAX": 1002,
+        "KEY_MOOD_MIN": 1001,
+        "KEY_MOOD_STEP": 1003,
+        "KEY_REMINDER_DAYS": 2001
     },
     "capabilities": [
         "configurable"
