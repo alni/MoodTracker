@@ -250,8 +250,11 @@ Pebble.addEventListener('ready', function() {
   
   // Load Reminder settings from localStorage on the mobile device
   // Or use default values of nothing is stored.
+  
   NUM_DAYS = localStorage[reminderDaysSetting] || NUM_DAYS;
-  HOURS = localStorage[reminderHoursSetting].split(",").map(Number) || HOURS;
+  HOURS = localStorage[reminderHoursSetting] ? 
+    localStorage[reminderHoursSetting].split(",").map(Number) 
+    : HOURS;
   
   var time = new Date(),
       duration = 3600, // 1 hour
