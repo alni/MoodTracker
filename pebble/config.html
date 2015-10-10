@@ -36,6 +36,44 @@
                   <input type="number" class="form-control" id="mood_step" value="1" min="1" max="10"placeholder="Mood Step">
                 </div>
               </div>
+              <hr />
+              <div class="form-group">
+                <label for="reminder_days" class="col-sm-2 control-label">Reminder Days</label>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" id="reminder_days" value="7" min="1" max="14" placeholder="Days in the future to give reminders">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="reminder_hours" class="col-sm-2 control-label">Reminder Hours</label>
+                <div class="col-sm-10">
+                  <select id="reminder_hours" multiple class="form-control">
+                    <option value="0">0 (12 am)</option>
+                    <option value="1">1 (1 am)</option>
+                    <option value="2">2 (2 am)</option>
+                    <option value="3">3 (3 am)</option>
+                    <option value="4">4 (4 am)</option>
+                    <option value="5">5 (5 am)</option>
+                    <option value="6">6 (6 am)</option>
+                    <option value="7">7 (7 am)</option>
+                    <option value="8">8 (8 am)</option>
+                    <option value="9">9 (9 am)</option>
+                    <option value="10">10 (10 am)</option>
+                    <option value="11">11 (11 am)</option>
+                    <option value="12">12 (12 pm)</option>
+                    <option value="13">13 (1 pm)</option>
+                    <option value="14">14 (2 pm)</option>
+                    <option value="15">15 (3 pm)</option>
+                    <option value="16">16 (4 pm)</option>
+                    <option value="17">17 (5 pm)</option>
+                    <option value="18">18 (6 pm)</option>
+                    <option value="19">19 (7 pm)</option>
+                    <option value="20">20 (8 pm)</option>
+                    <option value="21">21 (9 pm)</option>
+                    <option value="22">22 (10 pm)</option>
+                    <option value="23">23 (11 pm)</option>
+                  </select>
+                </div>
+              </div>
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                   <button id="submit_button" type="submit" class="btn btn-default">Submit</button>
