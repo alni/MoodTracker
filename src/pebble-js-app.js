@@ -31,6 +31,7 @@ var moodMinSetting = 'mood_min';
 var moodMaxSetting = 'mood_max';
 var moodStepSetting = 'mood_step';
 var reminderDaysSetting = 'reminder_days';
+var reminderHoursSetting = 'reminder_hours';
 
 Pebble.addEventListener('showConfiguration', function(e) {
   // Show config page
@@ -48,6 +49,10 @@ Pebble.addEventListener('webviewclosed', function(e) {
     "KEY_MOOD_STEP": config_data[moodStepSetting],
     "KEY_REMINDER_DAYS": config_data[reminderDaysSetting]
   };
+  
+  // Store Reminder settings in localStorage on the mobile device
+  localStorage[reminderDaysSetting] = config_data[reminderDaysSetting] + "";
+  localStorage[reminderHoursSetting] = config_data[reminderHoursSetting].join(",");
   
   // Send settings to Pebble watchapp
   Pebble.sendAppMessage(dict, function() {
@@ -238,13 +243,20 @@ var MoodTracker = (function() {
 
 
 var NUM_DAYS = 7; // Number of days to create pins for
+var HOURS = [10, 14, 18, 22]; // Hours to create pins for
 
 Pebble.addEventListener('ready', function() {
   console.log('PebbleKit JS ready!');
+  
+  // Load Reminder settings from localStorage on the mobile device
+  // Or use default values of nothing is stored.
+  NUM_DAYS = localStorage[reminderDaysSetting] || NUM_DAYS;
+  HOURS = localStorage[reminderHoursSetting].split(",").map(Number) || HOURS;
+  
   var time = new Date(),
       duration = 3600, // 1 hour
       times = [],
-      hours = [10, 14, 18, 22],
+      hours = HOURS, //[10, 14, 18, 22],
       _time = null,
       i = 0,
       j = 0,
@@ -267,13 +279,25 @@ Pebble.addEventListener('ready', function() {
   results = new Array(length);
   pin = new MoodTracker.Pin(times[0], duration, [times[0].getHours()]);
   pin.onInserted = function(responseText) {
+    // Insert another Timeline Pin after the previous as been inserted
+    
+    // Add the response from the inserted pin to results
     results[completed] = responseText;
     if (++completed === length) {
+      // After all Pins has been inserted log the combined results
       console.log('Result: ' + results.join(' ; '));
     } else {
+      // If there are still Pins that need to be inserted, use the same
+      // MoodTracker Pin object, but set the Pin time and remnders of the 
+      // next Pin in line
       pin.time = times[completed];
       pin.reminders = [times[completed].getHours()];
+      // Re-set the MoodTracker Pin object to the MoodTracker Pin object 
+      // returned when inserting the Pin to the Timeline
       pin = pin.insertPin();
+      // Because we are using the same MoodTracker Pin object, this same
+      // "onInserted" event callback will be called when this Pin has been
+      // inserted to the Timeline
     }
   };
   //onsole.log('Inserting pin in the future: ' + JSON.stringify(pin));
