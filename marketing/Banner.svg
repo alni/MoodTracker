@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="720"
+   height="320"
+   viewBox="0 0 720.00001 320.00001"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="Banner.svg">
+  <defs
+     id="defs4">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath9880">
+      <path
+         d="M 0,800 800,800 800,0 0,0 0,800 Z"
+         id="path9882"
+         inkscape:connector-curvature="0" />
+    </clipPath>
+    <linearGradient
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="0"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(639,0,0,-639,161,139.07422)"
+       spreadMethod="pad"
+       id="linearGradient9862">
+      <stop
+         style="stop-opacity:1;stop-color:#ededed"
+         offset="0"
+         id="stop9864" />
+      <stop
+         style="stop-opacity:1;stop-color:#ffffff"
+         offset="0.13681565"
+         id="stop9866" />
+      <stop
+         style="stop-opacity:1;stop-color:#ffffff"
+         offset="0.520143"
+         id="stop9868" />
+      <stop
+         style="stop-opacity:1;stop-color:#ffffff"
+         offset="0.77471397"
+         id="stop9870" />
+      <stop
+         style="stop-opacity:1;stop-color:#ededed"
+         offset="1"
+         id="stop9872" />
+    </linearGradient>
+    <linearGradient
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="0"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(639,0,0,-639,80.5,394.9375)"
+       spreadMethod="pad"
+       id="linearGradient1134">
+      <stop
+         style="stop-opacity:1;stop-color:#319d7d"
+         offset="0"
+         id="stop1136" />
+      <stop
+         style="stop-opacity:1;stop-color:#31bf9d"
+         offset="0.31424023"
+         id="stop1138" />
+      <stop
+         style="stop-opacity:1;stop-color:#31bf9d"
+         offset="0.520143"
+         id="stop1140" />
+      <stop
+         style="stop-opacity:1;stop-color:#31bf9d"
+         offset="0.77471397"
+         id="stop1142" />
+      <stop
+         style="stop-opacity:1;stop-color:#319d7d"
+         offset="1"
+         id="stop1144" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="364.80884"
+     inkscape:cy="195.51233"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1536"
+     inkscape:window-height="801"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       position="30.052039,306.58131"
+       orientation="1,0"
+       id="guide12219" />
+    <sodipodi:guide
+       position="690.0289,307.49676"
+       orientation="1,0"
+       id="guide12221" />
+    <sodipodi:guide
+       position="3.8839286,30.000001"
+       orientation="0,1"
+       id="guide12223" />
+    <sodipodi:guide
+       position="-72.142858,230.71429"
+       orientation="0,1"
+       id="guide12225" />
+    <sodipodi:guide
+       position="477.14287,192.85715"
+       orientation="0,1"
+       id="guide12231" />
+    <sodipodi:guide
+       position="7.7678573,290.00001"
+       orientation="0,1"
+       id="guide5963" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-732.36216)">
+    <g
+       transform="matrix(1.1267606,0,0,-2.0474889,-90.704225,1700.9923)"
+       id="g1130">
+      <g
+         id="g1132">
+        <path
+           d="m 80.5,316.793 639,0 0,156.289 -639,0 0,-156.289 z"
+           style="fill:url(#linearGradient1134);stroke:none"
+           id="path1146"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+    <g
+       id="g1208"
+       transform="matrix(2.7525231,0,0,-2.857798,63.958048,886.55034)">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:20.4613018px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="-12.262262"
+         y="0.24400374"
+         id="text5965"
+         sodipodi:linespacing="125%"
+         transform="scale(1.0189439,-0.98140829)"><tspan
+           sodipodi:role="line"
+           id="tspan5967"
+           x="-12.262262"
+           y="0.24400374"
+           style="font-size:12.14889812px;fill:#f5f5f5;fill-opacity:1">Log mood once a day for up to 7 days.</tspan><tspan
+           sodipodi:role="line"
+           x="-12.262262"
+           y="15.430126"
+           style="font-size:12.14889812px;fill:#f5f5f5;fill-opacity:1"
+           id="tspan5969" /><tspan
+           sodipodi:role="line"
+           x="-12.262262"
+           y="30.616249"
+           style="font-size:12.14889812px;fill:#f5f5f5;fill-opacity:1"
+           id="tspan5971">Easily keep track of past mood swings</tspan><tspan
+           sodipodi:role="line"
+           x="-12.262262"
+           y="45.802372"
+           style="font-size:12.14889812px;fill:#f5f5f5;fill-opacity:1"
+           id="tspan5973">with the overview graph.</tspan></text>
+    </g>
+    <path
+       d="m 690,847.87521 -660,0 0,-2.8578 660,0 0,2.8578 z"
+       style="fill:#f5f5f5;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path2048"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="28.623466"
+       y="820.93359"
+       id="text5975"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan5977"
+         x="28.623466"
+         y="820.93359"
+         style="font-size:68.75px;fill:#f5f5f5;fill-opacity:1">MOOD TRACKING</tspan></text>
+  </g>
+</svg>
