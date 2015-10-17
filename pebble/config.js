@@ -66,6 +66,35 @@ function getConfigData() {
 
 $(document).ready(function() {
   loadConfigData();
+
+  $("#mood_min, #mood_max").on("change", function(oEvent) {
+    var $mood_min = $("#mood_min");
+    var $mood_max = $("#mood_max");
+    if ($mood_min.val() === $mood_max.val()) {
+      switch ($(this).attr("id")) {
+        case "mood_min":
+          // ensure that mood_max is always greater than mood_min
+          $mood_max.get(0).stepUp(1);
+          break;
+        case "mood_max":
+          // ensure that mood_min is always less than mood_max
+          $mood_min.get(0).stepDown(1);
+          break;
+      }
+    }
+  });
+
+  $("button.decrement, button.increment").on("click", function(oEvent) {
+    var $this = $(this);
+    var $input = $("#" + $this.data("input-id"));
+    if ($this.hasClass("decrement")) {
+      $input.get(0).stepDown(1);
+    } else {
+      $input.get(0).stepUp(1);
+    }
+    $input.trigger("change");
+  });
+
   $("#submit_button").on("click", function(oEvent) {
     oEvent.preventDefault();
     // Set the return URL depending on the runtime environment
