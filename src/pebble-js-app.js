@@ -67,6 +67,12 @@ Pebble.addEventListener('webviewclosed', function(e) {
  * @namespace
  */
 var MoodTracker = (function() {
+  /**
+   * Format number with leading zero if less than 10
+   * @param {integer} num - the number to format
+   * @retuns {string} returns the number with leading
+   *     zero if less than 10
+   */
   var formatNumber = function (num) {
     return num < 10 ? "0" + num : "" + num;
   };
@@ -257,7 +263,7 @@ Pebble.addEventListener('ready', function() {
     : HOURS;
   
   var time = new Date(),
-      duration = 3600, // 1 hour
+      duration = 60, // 1 hour (60 minutes)
       times = [],
       hours = HOURS, //[10, 14, 18, 22],
       _time = null,
