@@ -15,7 +15,9 @@ Stores data for the last week (last 7 days). The currently stored dataset can be
 
 Based on the <https://github.com/pebble-examples/feature-persist-counter/> example project.
 
-The app logo and banner is based on the **Healthcare free vector** [Designed by Freepik](http://www.freepik.com/free-vector/healthcare-free-vector-banners_713583.htm).
+The app logo and banner are based on the **Healthcare free vector** [Designed by Freepik](http://www.freepik.com/free-vector/healthcare-free-vector-banners_713583.htm).
+
+The ActionBar icons are from (or based upon icons from) the **[Material Design Icons](https://github.com/google/material-design-icons)** by Google
 
 ## How to get it ##
 
