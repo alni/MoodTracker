@@ -14,6 +14,21 @@
     "resources": {
         "media": [
             {
+                "file": "images/ic_done_16px.png",
+                "name": "IMAGE_ACTION_ICON_DONE",
+                "type": "png"
+            },
+            {
+                "file": "images/ic_remove_box_16px.png",
+                "name": "IMAGE_ACTION_ICON_REMOVE",
+                "type": "png"
+            },
+            {
+                "file": "images/ic_add_box_16px.png",
+                "name": "IMAGE_ACTION_ICON_ADD",
+                "type": "png"
+            },
+            {
                 "file": "images/action_icon_plus.png",
                 "name": "IMAGE_ACTION_ICON_PLUS",
                 "type": "png"

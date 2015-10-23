@@ -45,7 +45,7 @@ static Window *s_main_window;
  
 static ActionBarLayer *s_action_bar;
 static TextLayer *s_header_layer, *s_body_layer, *s_label_layer;
-static GBitmap *s_icon_plus, *s_icon_minus;
+static GBitmap *s_icon_plus, *s_icon_minus, *s_icon_done;
 
 static int s_num_mood = NUM_MOOD_DEFAULT;
 static int s_mood_min = NUM_MOOD_MIN;
@@ -106,17 +106,12 @@ static void main_window_load(Window *window) {
 
   action_bar_layer_set_icon(s_action_bar, BUTTON_ID_UP, s_icon_plus);
   action_bar_layer_set_icon(s_action_bar, BUTTON_ID_DOWN, s_icon_minus);
-#ifdef PBL_COLOR
-  // Set the Window background color to a color that is similar to hospital 
-  // walls
-  window_set_background_color(window, GColorCadetBlue);
-  // Set the actionbar background color to a color that is similar to medical 
-  // staff uniforms
-  action_bar_layer_set_background_color(s_action_bar, GColorCobaltBlue);
-#endif
-
+  action_bar_layer_set_icon(s_action_bar, BUTTON_ID_SELECT, s_icon_done);
+  
+  
   int width = layer_get_frame(window_layer).size.w - ACTION_BAR_WIDTH - 3;
 
+  // Header Text Layer
   s_header_layer = text_layer_create(GRect(4, 0, width, 60));
   text_layer_set_font(s_header_layer, 
                       fonts_get_system_font(FONT_KEY_GOTHIC_24));
@@ -124,18 +119,34 @@ static void main_window_load(Window *window) {
   text_layer_set_text(s_header_layer, "Mood Tracker");
   layer_add_child(window_layer, text_layer_get_layer(s_header_layer));
 
+  // Body Text Layer
   s_body_layer = text_layer_create(GRect(4, 44, width, 60));
   text_layer_set_font(s_body_layer, 
                       fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
   text_layer_set_background_color(s_body_layer, GColorClear);
   layer_add_child(window_layer, text_layer_get_layer(s_body_layer));
 
+  // Label Text Layer
   s_label_layer = text_layer_create(GRect(4, 44 + 28, width, 60));
   text_layer_set_font(s_label_layer, 
                       fonts_get_system_font(FONT_KEY_GOTHIC_18));
   text_layer_set_background_color(s_label_layer, GColorClear);
+  
   text_layer_set_text(s_label_layer, "of mood today");
   layer_add_child(window_layer, text_layer_get_layer(s_label_layer));
+  
+#ifdef PBL_COLOR
+  // Set the Window background color to a color that is similar to hospital 
+  // walls
+  window_set_background_color(window, GColorCadetBlue);
+  // Set the actionbar background color to a color that is similar to medical 
+  // staff uniforms
+  action_bar_layer_set_background_color(s_action_bar, GColorCobaltBlue);
+  
+  text_layer_set_text_color(s_header_layer, GColorWhite);
+  text_layer_set_text_color(s_body_layer, GColorWhite);
+  text_layer_set_text_color(s_label_layer, GColorWhite);
+#endif
 
   update_text();
 }
@@ -159,9 +170,11 @@ static void main_window_unload(Window *window) {
 
 static void init() {
   s_icon_plus = gbitmap_create_with_resource(
-    RESOURCE_ID_IMAGE_ACTION_ICON_PLUS);
+    RESOURCE_ID_IMAGE_ACTION_ICON_ADD);
   s_icon_minus = gbitmap_create_with_resource(
-    RESOURCE_ID_IMAGE_ACTION_ICON_MINUS);
+    RESOURCE_ID_IMAGE_ACTION_ICON_REMOVE);
+  s_icon_done = gbitmap_create_with_resource(
+    RESOURCE_ID_IMAGE_ACTION_ICON_DONE);
   
   s_mood_min = storage_read_int(KEY_MOOD_MIN, NUM_MOOD_MIN);
   s_mood_max = storage_read_int(KEY_MOOD_MAX, NUM_MOOD_MAX);

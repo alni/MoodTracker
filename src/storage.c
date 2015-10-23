@@ -62,6 +62,7 @@ void storage_save_mood(int key, int mood) {
     case KEY_MOOD_THU:
     case KEY_MOOD_FRI:
     case KEY_MOOD_SAT:
+      s_moods[key] = mood;
       persist_write_int(key, mood);
       break;
   }
@@ -88,7 +89,7 @@ int storage_read_mood(int key) {
     // Load stored count
     mood = persist_read_int(key);
   }
-  #endif
+#endif
   return mood;
 }
   
