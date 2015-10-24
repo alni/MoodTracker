@@ -18,94 +18,100 @@
           <h2>MoodTracker Setup</h2>
           <div class="well text-center">
             <form class="form-horizontal">
-              <div class="form-group">
-                <label for="mood_min" class="col-sm-2 control-label">Mood Min</label>
-                <div class="col-sm-10">
-                  <div class="input-group">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default decrement" type="button" data-input-id="mood_min"><i class="fa fa-minus"></i></button>
-                    </span>
-                    <input type="number" class="form-control" id="mood_min" value="0" min="-100" max="0" step="10" placeholder="Mood Min">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default increment" type="button" data-input-id="mood_min"><i class="fa fa-plus"></i></button>
-                    </span>
+              <fieldset>
+                <legend><i class="fa fa-smile-o"></i> Mood setup</legend>
+                <div class="form-group">
+                  <label for="mood_min" class="col-sm-2 control-label">Mood Min</label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default decrement" type="button" data-input-id="mood_min"><i class="fa fa-minus"></i></button>
+                      </span>
+                      <input type="number" class="form-control" id="mood_min" value="0" min="-100" max="0" step="10" placeholder="Mood Min">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default increment" type="button" data-input-id="mood_min"><i class="fa fa-plus"></i></button>
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label for="mood_max" class="col-sm-2 control-label">Mood Max</label>
-                <div class="col-sm-10">
-                  <div class="input-group">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default decrement" type="button" data-input-id="mood_max"><i class="fa fa-minus"></i></button>
-                    </span>
-                    <input type="number" class="form-control" id="mood_max" value="10" min="0" max="100" step="10" placeholder="Mood Max">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default increment" type="button" data-input-id="mood_max"><i class="fa fa-plus"></i></button>
-                    </span>
+                <div class="form-group">
+                  <label for="mood_max" class="col-sm-2 control-label">Mood Max</label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default decrement" type="button" data-input-id="mood_max"><i class="fa fa-minus"></i></button>
+                      </span>
+                      <input type="number" class="form-control" id="mood_max" value="10" min="0" max="100" step="10" placeholder="Mood Max">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default increment" type="button" data-input-id="mood_max"><i class="fa fa-plus"></i></button>
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label for="mood_step" class="col-sm-2 control-label">Mood Step</label>
-                <div class="col-sm-10">
-                  <div class="input-group">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default decrement" type="button" data-input-id="mood_step"><i class="fa fa-minus"></i></button>
-                    </span>
-                    <input type="number" class="form-control" id="mood_step" value="1" min="1" max="10"placeholder="Mood Step">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default increment" type="button" data-input-id="mood_step"><i class="fa fa-plus"></i></button>
-                    </span>
+                <div class="form-group">
+                  <label for="mood_step" class="col-sm-2 control-label">Mood Step</label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default decrement" type="button" data-input-id="mood_step"><i class="fa fa-minus"></i></button>
+                      </span>
+                      <input type="number" class="form-control" id="mood_step" value="1" min="1" max="10"placeholder="Mood Step">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default increment" type="button" data-input-id="mood_step"><i class="fa fa-plus"></i></button>
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </fieldset>
               <hr />
-              <div class="form-group">
-                <label for="reminder_days" class="col-sm-2 control-label">Reminder Days</label>
-                <div class="col-sm-10">
-                  <div class="input-group">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default decrement" type="button" data-input-id="reminder_days"><i class="fa fa-minus"></i></button>
-                    </span>
-                    <input type="number" class="form-control" id="reminder_days" value="7" min="1" max="14" placeholder="Days in the future to give reminders">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default increment" type="button" data-input-id="reminder_days"><i class="fa fa-plus"></i></button>
-                    </span>
+              <fieldset>
+                <legend><i class="fa fa-bell-o"></i> Reminder setup</legend>
+                <div class="form-group">
+                  <label for="reminder_days" class="col-sm-2 control-label">Reminder Days</label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default decrement" type="button" data-input-id="reminder_days"><i class="fa fa-minus"></i></button>
+                      </span>
+                      <input type="number" class="form-control" id="reminder_days" value="7" min="1" max="14" placeholder="Days in the future to give reminders">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default increment" type="button" data-input-id="reminder_days"><i class="fa fa-plus"></i></button>
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label for="reminder_hours" class="col-sm-2 control-label">Reminder Hours</label>
-                <div class="col-sm-10">
-                  <select id="reminder_hours" multiple class="form-control">
-                    <option value="0">0 (12 am)</option>
-                    <option value="1">1 (1 am)</option>
-                    <option value="2">2 (2 am)</option>
-                    <option value="3">3 (3 am)</option>
-                    <option value="4">4 (4 am)</option>
-                    <option value="5">5 (5 am)</option>
-                    <option value="6">6 (6 am)</option>
-                    <option value="7">7 (7 am)</option>
-                    <option value="8">8 (8 am)</option>
-                    <option value="9">9 (9 am)</option>
-                    <option value="10" selected="selected">10 (10 am)</option>
-                    <option value="11">11 (11 am)</option>
-                    <option value="12">12 (12 pm)</option>
-                    <option value="13">13 (1 pm)</option>
-                    <option value="14" selected="selected">14 (2 pm)</option>
-                    <option value="15">15 (3 pm)</option>
-                    <option value="16">16 (4 pm)</option>
-                    <option value="17">17 (5 pm)</option>
-                    <option value="18" selected="selected">18 (6 pm)</option>
-                    <option value="19">19 (7 pm)</option>
-                    <option value="20">20 (8 pm)</option>
-                    <option value="21">21 (9 pm)</option>
-                    <option value="22" selected="selected">22 (10 pm)</option>
-                    <option value="23">23 (11 pm)</option>
-                  </select>
+                <div class="form-group">
+                  <label for="reminder_hours" class="col-sm-2 control-label">Reminder Hours</label>
+                  <div class="col-sm-10">
+                    <select id="reminder_hours" multiple class="form-control">
+                      <option value="0">0 (12 am)</option>
+                      <option value="1">1 (1 am)</option>
+                      <option value="2">2 (2 am)</option>
+                      <option value="3">3 (3 am)</option>
+                      <option value="4">4 (4 am)</option>
+                      <option value="5">5 (5 am)</option>
+                      <option value="6">6 (6 am)</option>
+                      <option value="7">7 (7 am)</option>
+                      <option value="8">8 (8 am)</option>
+                      <option value="9">9 (9 am)</option>
+                      <option value="10" selected="selected">10 (10 am)</option>
+                      <option value="11">11 (11 am)</option>
+                      <option value="12">12 (12 pm)</option>
+                      <option value="13">13 (1 pm)</option>
+                      <option value="14" selected="selected">14 (2 pm)</option>
+                      <option value="15">15 (3 pm)</option>
+                      <option value="16">16 (4 pm)</option>
+                      <option value="17">17 (5 pm)</option>
+                      <option value="18" selected="selected">18 (6 pm)</option>
+                      <option value="19">19 (7 pm)</option>
+                      <option value="20">20 (8 pm)</option>
+                      <option value="21">21 (9 pm)</option>
+                      <option value="22" selected="selected">22 (10 pm)</option>
+                      <option value="23">23 (11 pm)</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
+              </fieldset>
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                   <button id="submit_button" type="submit" class="btn btn-default">Submit</button>
