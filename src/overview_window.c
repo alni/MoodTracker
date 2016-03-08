@@ -419,7 +419,7 @@ void overview_window_push() {
     
     s_main_window = window_create();
   #ifdef PBL_PLATFORM_APLITE
-    window_set_fullscreen(s_main_window, true);
+    // window_set_fullscreen(s_main_window, true);
   #endif
     window_set_window_handlers(s_main_window, (WindowHandlers) {
         .load = window_load,

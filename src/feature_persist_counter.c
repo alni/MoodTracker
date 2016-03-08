@@ -143,9 +143,9 @@ static void main_window_load(Window *window) {
   // staff uniforms
   action_bar_layer_set_background_color(s_action_bar, GColorCobaltBlue);
   
-  text_layer_set_text_color(s_header_layer, GColorWhite);
-  text_layer_set_text_color(s_body_layer, GColorWhite);
-  text_layer_set_text_color(s_label_layer, GColorWhite);
+  text_layer_set_text_color(s_header_layer, GColorBlack);
+  text_layer_set_text_color(s_body_layer, GColorBlack);
+  text_layer_set_text_color(s_label_layer, GColorBlack);
 #endif
 
   update_text();

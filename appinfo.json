@@ -9,6 +9,7 @@
         "configurable"
     ],
     "companyName": "Alexander Nilsen",
+    "enableMultiJS": true,
     "longName": "Mood Tracker",
     "projectType": "native",
     "resources": {
@@ -16,27 +17,27 @@
             {
                 "file": "images/ic_done_16px.png",
                 "name": "IMAGE_ACTION_ICON_DONE",
-                "type": "png"
-            },
-            {
-                "file": "images/ic_remove_box_16px.png",
-                "name": "IMAGE_ACTION_ICON_REMOVE",
-                "type": "png"
-            },
-            {
-                "file": "images/ic_add_box_16px.png",
-                "name": "IMAGE_ACTION_ICON_ADD",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/action_icon_plus.png",
                 "name": "IMAGE_ACTION_ICON_PLUS",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/action_icon_minus.png",
                 "name": "IMAGE_ACTION_ICON_MINUS",
-                "type": "png"
+                "type": "bitmap"
+            },
+            {
+                "file": "images/ic_remove_box_16px.png",
+                "name": "IMAGE_ACTION_ICON_REMOVE",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/ic_add_box_16px.png",
+                "name": "IMAGE_ACTION_ICON_ADD",
+                "type": "bitmap"
             }
         ]
     },
