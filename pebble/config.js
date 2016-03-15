@@ -14,6 +14,15 @@ function getQueryParam(variable, defaultValue) {
   return defaultValue || false;
 }
 
+/**
+ * https://stackoverflow.com/a/19572784
+ */
+function getAndroidVersion(ua) {
+  ua = (ua || navigator.userAgent).toLowerCase(); 
+  var match = ua.match(/android\s([0-9\.]*)/);
+  return match ? match[1] : false;
+}
+
 function loadConfigData() {
   var $mood_min = $("#mood_min");
   var $mood_max = $("#mood_max");
@@ -64,7 +73,11 @@ function getConfigData() {
 }
 
 
-$(document).ready(function() {
+$(document).ready(function () {
+  var android_version = getAndroidVersion();
+  if (android_version !== false && parseFloat(android_version) < 4.4) {
+    $("body").addClass("android-fix");
+  }
   loadConfigData();
 
   $("#mood_min, #mood_max").on("change", function(oEvent) {

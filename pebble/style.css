@@ -1,0 +1,10 @@
+﻿.android-fix input {
+	padding-right: 0 !important;
+	margin-left: 1px !important;
+	border-right: none !important;
+	height: 100%;
+}
+	
+.android-fix button {
+	border-bottom: none !important;
+}
