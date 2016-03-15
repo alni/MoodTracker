@@ -27,6 +27,7 @@ function loadConfigData() {
   var $mood_min = $("#mood_min");
   var $mood_max = $("#mood_max");
   var $mood_step = $("#mood_step");
+  var $mood_backup = null;
   var $reminder_days = $("#reminder_days");
   var $reminder_hours = $("#reminder_hours");
   if (localStorage["mood_min"]) {
@@ -37,6 +38,10 @@ function loadConfigData() {
   }
   if (localStorage["mood_step"]) {
     $mood_step.val(localStorage["mood_step"])
+  }
+  if (localStorage["mood_backup"]) {
+    $mood_backup = $("input[name=mood_backup][value=" + localStorage["mood_backup"] + "]");
+    $mood_backup.prop('checked', true).trigger("click");
   }
   if (localStorage["reminder_days"]) {
     $reminder_days.val(localStorage["reminder_days"]);
@@ -50,6 +55,7 @@ function getConfigData() {
   var $mood_min = $("#mood_min");
   var $mood_max = $("#mood_max");
   var $mood_step = $("#mood_step");
+  var $mood_backup = $('[name="mood_backup"]:checked');
   var $reminder_days = $("#reminder_days");
   var $reminder_hours = $("#reminder_hours");
 
@@ -57,6 +63,7 @@ function getConfigData() {
     "mood_min": +$mood_min.val(),
     "mood_max": +$mood_max.val(),
     "mood_step": +$mood_step.val(),
+    "mood_backup": +$mood_backup.val(),
     "reminder_days": +$reminder_days.val(),
     "reminder_hours": $reminder_hours.val().map(Number)
   };
@@ -65,6 +72,7 @@ function getConfigData() {
   localStorage["mood_min"] = options["mood_min"] + "";
   localStorage["mood_max"] = options["mood_max"] + "";
   localStorage["mood_step"] = options["mood_step"] + "";
+  localStorage["mood_backup"] = options["mood_backup"] + "";
   localStorage["reminder_days"] = options["reminder_days"] + "";
   localStorage["reminder_hours"] = options["reminder_hours"];
 
