@@ -1,8 +1,16 @@
 {
     "appKeys": {
+        "KEY_MOODS": 3001,
+        "KEY_MOOD_FRI": 5,
         "KEY_MOOD_MAX": 1002,
         "KEY_MOOD_MIN": 1001,
+        "KEY_MOOD_MON": 1,
+        "KEY_MOOD_SAT": 6,
         "KEY_MOOD_STEP": 1003,
+        "KEY_MOOD_SUN": 0,
+        "KEY_MOOD_THU": 4,
+        "KEY_MOOD_TUE": 2,
+        "KEY_MOOD_WED": 3,
         "KEY_REMINDER_DAYS": 2001
     },
     "capabilities": [

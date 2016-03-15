@@ -29,11 +29,21 @@ src/pebble-js-app.js
 
 var MoodTracker = require('lib/mood_tracker.js');
 
+var KEY_MOOD_SUN = 0;
+var KEY_MOOD_MON = 1;
+var KEY_MOOD_TUE = 2;
+var KEY_MOOD_WED = 3;
+var KEY_MOOD_THU = 4;
+var KEY_MOOD_FRI = 5;
+var KEY_MOOD_SAT = 6;
+
 var moodMinSetting = 'mood_min';
 var moodMaxSetting = 'mood_max';
 var moodStepSetting = 'mood_step';
 var reminderDaysSetting = 'reminder_days';
 var reminderHoursSetting = 'reminder_hours';
+
+var moodLoggedData = 'mood_data';
 
 Pebble.addEventListener('showConfiguration', function(e) {
   // Show config page
@@ -64,11 +74,43 @@ Pebble.addEventListener('webviewclosed', function(e) {
   });
 });
 
+// Get AppMessage events
+Pebble.addEventListener('appmessage', function(e) {
+  // Get the dictionary from the message
+  var dict = e.payload;
+
+  console.log('Got message: ' + JSON.stringify(dict));
+  
+  var moods = (localStorage[moodLoggedData] || '0,0,0,0,0,0,0').split(',').map(Number);
+  for (var i = KEY_MOOD_SUN; i <= KEY_MOOD_SAT; i++) {
+    if (dict.hasOwnProperty(i)) {
+      moods[i] = dict[i]; 
+    }
+  }
+  
+  localStorage[moodLoggedData] = moods.join(',');
+});
+
 var NUM_DAYS = 7; // Number of days to create pins for
 var HOURS = [10, 14, 18, 22]; // Hours to create pins for
 
 Pebble.addEventListener('ready', function() {
   console.log('PebbleKit JS ready!');
+  
+  // Load Mood Data from LocalStorage on the mobile device
+  var moods = (localStorage[moodLoggedData] || "0,0,0,0,0,0,0").split(",").map(Number);
+  //moods = [ 7, 8, 7, 7, 5, 6, 5 ];
+  var dict = {};
+  // Loop through each mood and add them to dict
+  for (var mood_day = 0; mood_day < moods.length; mood_day++) {
+   dict[mood_day] = moods[mood_day];
+  }
+  // Send the moods (in "dict") to the Pebble
+  Pebble.sendAppMessage(dict, function() {
+    console.log('Sent config data to Pebble');
+  }, function() {
+    console.log('Failed to send config data!');
+  });
   
   // Load Reminder settings from localStorage on the mobile device
   // Or use default values of nothing is stored.

@@ -43,6 +43,7 @@ src/storage.h
 #define KEY_MOOD_MAX 1002
 #define KEY_MOOD_STEP 1003
 #define KEY_REMINDER_DAYS 2001
+#define KEY_MOODS = 3001
 
 #include "pebble.h"
 
@@ -82,6 +83,7 @@ int  storage_read_mood(int key);
   
 void sync_changed_handler(const uint32_t key, const Tuple *new_tuple, const Tuple *old_tuple, void *context);
 
+void inbox_received_read_moods(DictionaryIterator *iterator, void *context);
 void inbox_received_callback(DictionaryIterator *iterator, void *context);
 void inbox_dropped_callback(AppMessageResult reason, void *context);
 void outbox_failed_callback(DictionaryIterator *iterator, AppMessageResult reason, void *context);

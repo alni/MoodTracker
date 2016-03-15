@@ -47,8 +47,8 @@ var createPin = function(time, duration, bwDisplay) {
       "type": "genericPin",
       "tinyIcon": "system://images/NOTIFICATION_REMINDER",
       "body": "Remember to log your mood.",
-      "primaryColor": bwDisplay ? "#FFFFFF" : "#00000",
-      "secondaryColor": bwDisplay ? "#FFFFFF" : "#00000",
+      "primaryColor": bwDisplay ? "#FFFFFF" : "#000000",
+      "secondaryColor": bwDisplay ? "#FFFFFF" : "#000000",
       "backgroundColor": bwDisplay ? "#000000" : "#55AAAA"
     },
     "reminders": [],
@@ -132,7 +132,7 @@ MoodTrackerPin.prototype.insertPin = function() {
   }
   var pin = this.getPin();
   if (this.debug) {
-    console.log('Inserting pin in the future: ' + JSON.stringify(pin, null, '  '));
+    console.log('Inserting pin in the future: ' + JSON.stringify(pin));
   }
   timeline.insertUserPin(pin, this.onInserted);
   return this;

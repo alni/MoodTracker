@@ -33,6 +33,10 @@ src/storage.c
   
 static int s_moods[7];
 
+#define NUM_ITEMS 7;
+
+static int s_index = 0;
+
 int storage_read_int(int key, int def) {
   // Count number of launches
   int val = 0;
@@ -65,6 +69,28 @@ void storage_save_mood(int key, int mood) {
       s_moods[key] = mood;
       persist_write_int(key, mood);
       break;
+  }
+  
+  // Declare the dictionary's iterator
+  DictionaryIterator *out_iter;
+  
+  // Prepare the outbox buffer for this message
+  AppMessageResult result = app_message_outbox_begin(&out_iter);
+  
+  if (result == APP_MSG_OK) {    
+    // Add the current mood data
+    dict_write_int(out_iter, s_index, &s_moods[s_index], sizeof(int), true);
+    
+    // Send the message
+    result = app_message_outbox_send();
+    
+    // Check the result
+    if (result != APP_MSG_OK) {
+      APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending the outbox: %d", (int)result);
+    }
+  } else {
+    // The outbox cannot be used right now
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int)result);
   }
 }
 
@@ -127,9 +153,11 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "Mood Step = %d", mood_step);
     persist_write_int(KEY_MOOD_STEP, mood_step);
   }
+  
+  inbox_received_read_moods(iterator, context);
 }
 
-/*void inbox_received_callback(DictionaryIterator *iterator, void *context) {
+void inbox_received_read_moods(DictionaryIterator *iterator, void *context) {
   // Get the first pair
   Tuple *t = dict_read_first(iterator);
 
@@ -154,7 +182,7 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
     // Get next pair, if any
     t = dict_read_next(iterator);
   }
-}*/
+}
 
 /*void inbox_dropped_callback(AppMessageResult reason, void *context) {
   APP_LOG(APP_LOG_LEVEL_ERROR, "Message dropped!");
@@ -164,7 +192,23 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   APP_LOG(APP_LOG_LEVEL_ERROR, "Outbox send failed!");
 }*/
 
-/*void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
+void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
   APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success!");
-}*/
+  
+  // Increment the index
+  s_index++;
+
+  if (s_index < 7) {
+    // Send the next item
+    DictionaryIterator *iter;
+    if(app_message_outbox_begin(&iter) == APP_MSG_OK) {
+      dict_write_int(iter, s_index, &s_moods[s_index], sizeof(int), true);
+      app_message_outbox_send();
+    }
+  } else {
+    // We have reached the end of the sequence
+    s_index = 0;
+    APP_LOG(APP_LOG_LEVEL_INFO, "All transmission complete!");
+  }
+}
 
