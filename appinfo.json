@@ -1,6 +1,7 @@
 {
     "appKeys": {
         "KEY_MOODS": 3001,
+        "KEY_MOOD_BACKUP": 1004,
         "KEY_MOOD_FRI": 5,
         "KEY_MOOD_MAX": 1002,
         "KEY_MOOD_MIN": 1001,

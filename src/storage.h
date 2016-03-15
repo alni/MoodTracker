@@ -42,6 +42,7 @@ src/storage.h
 #define KEY_MOOD_MIN 1001
 #define KEY_MOOD_MAX 1002
 #define KEY_MOOD_STEP 1003
+#define KEY_MOOD_BACKUP 1004
 #define KEY_REMINDER_DAYS 2001
 #define KEY_MOODS = 3001
 
@@ -52,6 +53,8 @@ int  storage_read_int(int key, int def);
 void storage_get_moods(int *output[], int length);
 
 int storage_get_mood(int key);
+
+int storage_get_mood_backup_flag();
 
 /*
  * Function: storage_save_mood

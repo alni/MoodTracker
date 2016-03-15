@@ -40,6 +40,7 @@ var KEY_MOOD_SAT = 6;
 var moodMinSetting = 'mood_min';
 var moodMaxSetting = 'mood_max';
 var moodStepSetting = 'mood_step';
+var moodBackupSetting = 'mood_backup';
 var reminderDaysSetting = 'reminder_days';
 var reminderHoursSetting = 'reminder_hours';
 
@@ -47,6 +48,7 @@ var moodLoggedData = 'mood_data';
 
 Pebble.addEventListener('showConfiguration', function(e) {
   // Show config page
+  //Pebble.openURL("http://192.168.0.8/pebble/config.html");
   Pebble.openURL('https://alni.github.io/MoodTracker/pebble/config.html');
 });
 
@@ -59,8 +61,11 @@ Pebble.addEventListener('webviewclosed', function(e) {
     "KEY_MOOD_MIN": config_data[moodMinSetting],
     "KEY_MOOD_MAX": config_data[moodMaxSetting],
     "KEY_MOOD_STEP": config_data[moodStepSetting],
+    "KEY_MOOD_BACKUP": config_data[moodBackupSetting],
     "KEY_REMINDER_DAYS": config_data[reminderDaysSetting]
   };
+  
+  localStorage[moodBackupSetting] = config_data[moodBackupSetting];
   
   // Store Reminder settings in localStorage on the mobile device
   localStorage[reminderDaysSetting] = config_data[reminderDaysSetting] + "";
@@ -93,24 +98,31 @@ Pebble.addEventListener('appmessage', function(e) {
 
 var NUM_DAYS = 7; // Number of days to create pins for
 var HOURS = [10, 14, 18, 22]; // Hours to create pins for
+var BACKUP = 0; // The Backup/Restore flag
 
 Pebble.addEventListener('ready', function() {
   console.log('PebbleKit JS ready!');
   
-  // Load Mood Data from LocalStorage on the mobile device
-  var moods = (localStorage[moodLoggedData] || "0,0,0,0,0,0,0").split(",").map(Number);
-  //moods = [ 7, 8, 7, 7, 5, 6, 5 ];
-  var dict = {};
-  // Loop through each mood and add them to dict
-  for (var mood_day = 0; mood_day < moods.length; mood_day++) {
-   dict[mood_day] = moods[mood_day];
+  if (localStorage.hasOwnProperty(moodBackupSetting)) {
+    BACKUP = +localStorage[moodBackupSetting];
   }
-  // Send the moods (in "dict") to the Pebble
-  Pebble.sendAppMessage(dict, function() {
-    console.log('Sent config data to Pebble');
-  }, function() {
-    console.log('Failed to send config data!');
-  });
+  
+  if (BACKUP == 1) { // Only restore if the user wishes so
+    // Load Mood Data from LocalStorage on the mobile device
+    var moods = (localStorage[moodLoggedData] || "0,0,0,0,0,0,0").split(",").map(Number);
+    //moods = [ 7, 8, 7, 7, 5, 6, 5 ];
+    var dict = {};
+    // Loop through each mood and add them to dict
+    for (var mood_day = 0; mood_day < moods.length; mood_day++) {
+     dict[mood_day] = moods[mood_day];
+    }
+    // Send the moods (in "dict") to the Pebble
+    Pebble.sendAppMessage(dict, function() {
+      console.log('Sent config data to Pebble');
+    }, function() {
+      console.log('Failed to send config data!');
+    });
+  }
   
   // Load Reminder settings from localStorage on the mobile device
   // Or use default values of nothing is stored.
