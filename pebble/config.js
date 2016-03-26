@@ -82,6 +82,12 @@ function getConfigData() {
 
 
 $(document).ready(function () {
+  $.get("README.md").done(function(content) {
+    $("#welcome-message").html(marked(content));
+    $("#welcome-message a").filter(function () {
+      return this.hostname != window.location.hostname;
+    }).attr('target', '_blank');
+  });
   var android_version = getAndroidVersion();
   if (android_version !== false && parseFloat(android_version) < 4.4) {
     $("body").addClass("android-fix");
