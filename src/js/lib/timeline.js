@@ -60,6 +60,6 @@ var timeline = {
   deleteUserPin : function(pin, callback)  {
     deleteUserPin(pin, callback) ;
   }
-}
+};
 
 module.exports = timeline;
