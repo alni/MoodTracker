@@ -4,7 +4,7 @@ https://github.com/alni/MoodTracker/
 ----------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 Alexander Nilsen
+Copyright (c) 2015-2016 Alexander Nilsen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -80,7 +80,7 @@ static void decrement_click_handler(ClickRecognizerRef recognizer,
 
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
   //persist_write_int(date_get_weekday(), s_num_mood);
-  storage_save_mood(date_get_weekday(), s_num_mood);
+  storage_save_mood(date_get_weekday(), s_num_mood, false);
   overview_window_push();
 }
 
@@ -212,8 +212,9 @@ static void init() {
 
 static void deinit() {
   APP_LOG(APP_LOG_LEVEL_DEBUG, "date_get_weekday() = %d", date_get_weekday());
+  app_message_deregister_callbacks();
   // Save the mood into persistent storage on app exit
-  storage_save_mood(date_get_weekday(), s_num_mood);
+  storage_save_mood(date_get_weekday(), s_num_mood, false);
   //persist_write_int(date_get_weekday(), s_num_mood);
 
   window_destroy(s_main_window);

@@ -4,7 +4,7 @@ https://github.com/alni/MoodTracker/
 ----------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 Alexander Nilsen
+Copyright (c) 2015-2016 Alexander Nilsen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -72,7 +72,7 @@ int storage_get_mood_backup_flag() {
   }
 }*/
   
-void storage_save_mood(int key, int mood) {
+void storage_save_mood(int key, int mood, bool only_diff) {
   switch(key) {
     case KEY_MOOD_SUN:
     case KEY_MOOD_MON:
@@ -81,11 +81,16 @@ void storage_save_mood(int key, int mood) {
     case KEY_MOOD_THU:
     case KEY_MOOD_FRI:
     case KEY_MOOD_SAT:
-      s_moods[key] = mood;
-      persist_write_int(key, mood);
+      if (!only_diff || (storage_get_mood(key) != mood && mood != 0)) {
+        // Only save the mood if "only_diff" is false (always replace), OR if
+        // the already stored mood is different from "mood" AND "mood" is not 0
+        s_moods[key] = mood;
+        persist_write_int(key, mood);
+      }
       break;
   }
   s_mood_backup = storage_get_mood_backup_flag();
+  APP_LOG(APP_DEBUG, "Backup Flag: %d", s_mood_backup);
   if (s_mood_backup == 1) { // Only back-up if the user wishes so
     // Declare the dictionary's iterator
     DictionaryIterator *out_iter;
@@ -108,7 +113,7 @@ void storage_save_mood(int key, int mood) {
       // The outbox cannot be used right now
       APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int)result);
     }
-    }
+  }
 }
 
 int storage_get_mood(int key) {
@@ -205,7 +210,7 @@ void inbox_received_read_moods(DictionaryIterator *iterator, void *context) {
       case KEY_MOOD_THU:
       case KEY_MOOD_FRI:
       case KEY_MOOD_SAT:
-        storage_save_mood(t->key, t->value->int32);
+        storage_save_mood(t->key, t->value->int32, true);
         break;
     }
 
