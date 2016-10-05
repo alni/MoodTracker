@@ -27,7 +27,7 @@ SOFTWARE.
 src/js/lib/mood_tracker.js
 */
 
-var timeline = require("timeline.js");
+var timeline = require("./timeline");
 
 /**
  * Format number with leading zero if less than 10

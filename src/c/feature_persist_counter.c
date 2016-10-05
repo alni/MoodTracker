@@ -170,11 +170,14 @@ static void main_window_unload(Window *window) {
 
 static void init() {
   s_icon_plus = gbitmap_create_with_resource(
-    RESOURCE_ID_IMAGE_ACTION_ICON_ADD);
+    RESOURCE_ID_IMAGE_ACTION_BAR_ICON_UP);
+    //RESOURCE_ID_IMAGE_ACTION_ICON_ADD);
   s_icon_minus = gbitmap_create_with_resource(
-    RESOURCE_ID_IMAGE_ACTION_ICON_REMOVE);
+    RESOURCE_ID_IMAGE_ACTION_BAR_ICON_DOWN);
+    //RESOURCE_ID_IMAGE_ACTION_ICON_REMOVE);
   s_icon_done = gbitmap_create_with_resource(
-    RESOURCE_ID_IMAGE_ACTION_ICON_DONE);
+    RESOURCE_ID_IMAGE_ACTION_BAR_ICON_CHECK);
+    //RESOURCE_ID_IMAGE_ACTION_ICON_DONE);
   
   s_mood_min = storage_read_int(KEY_MOOD_MIN, NUM_MOOD_MIN);
   s_mood_max = storage_read_int(KEY_MOOD_MAX, NUM_MOOD_MAX);

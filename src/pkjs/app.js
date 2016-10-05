@@ -27,7 +27,7 @@ SOFTWARE.
 src/js/app.js
 */
 
-var MoodTracker = require('lib/mood_tracker.js');
+var MoodTracker = require('./lib/mood_tracker');
 
 var KEY_MOOD_SUN = 0;
 var KEY_MOOD_MON = 1;
@@ -103,7 +103,7 @@ var BACKUP = 0; // The Backup/Restore flag
 Pebble.addEventListener('ready', function() {
   console.log('PebbleKit JS ready!');
   
-  if (localStorage.hasOwnProperty(moodBackupSetting)) {
+  if (localStorage.getItem(moodBackupSetting) !== null) {
     BACKUP = +localStorage[moodBackupSetting];
   }
   
